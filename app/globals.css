@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../vendor/shadcn-tailwind-4.13.0.css";
+:root{--background:#050a18;--foreground:#f8fafc;--primary:#16d9e3;--primary-foreground:#071126;--border:#25304a;--radius:.75rem}
+@theme inline{--color-background:var(--background);--color-foreground:var(--foreground);--color-primary:var(--primary);--color-primary-foreground:var(--primary-foreground);--color-border:var(--border);--font-sans:"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--background);color:var(--foreground);font-family:"Segoe UI",Arial,sans-serif}
+button,a,input,select,textarea{transition:all .18s ease}
+button,a{cursor:pointer}
+.hero-grid{background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to right,black,transparent 85%)}
+.field{display:flex;flex-direction:column;gap:.45rem;font-size:.875rem;font-weight:800;color:#334155}
+.field input,.field select,.field textarea{width:100%;border:1px solid #dfe5ef;border-radius:.75rem;background:#f8fafc;padding:.8rem .9rem;font:inherit;font-weight:500;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#2357d8;background:#fff;box-shadow:0 0 0 3px rgba(35,87,216,.1)}
+#san-pham .grid:empty{display:block;border:1px dashed rgba(103,232,249,.25);border-radius:1.5rem;padding:4rem 1.5rem;text-align:center;background:rgba(255,255,255,.025)}
+#san-pham .grid:empty::before{content:"Chưa có phần mềm nào được đăng";display:block;font-size:1.15rem;font-weight:800;color:#f8fafc}
+#san-pham .grid:empty::after{content:"Mở trang Quản trị để tải phần mềm thật đầu tiên lên Hugo Cyberx.";display:block;margin-top:.6rem;font-size:.9rem;color:#64748b}
+.cyber-grid{background-image:radial-gradient(circle at 77% 28%,rgba(226,49,255,.15),transparent 27%),radial-gradient(circle at 24% 18%,rgba(22,217,227,.12),transparent 32%),linear-gradient(rgba(22,217,227,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(22,217,227,.035) 1px,transparent 1px);background-size:auto,auto,38px 38px,38px 38px}.cyber-text{background:linear-gradient(90deg,#35f3ef,#ec55f2,#ff9654);-webkit-background-clip:text;background-clip:text;color:transparent}.admin-card{border:1px solid rgba(255,255,255,.1);border-radius:1rem;background:rgba(255,255,255,.055);padding:1.25rem}.admin-field{display:flex;flex-direction:column;gap:.45rem;font-size:.875rem;font-weight:700;color:#cbd5e1}.admin-field input,.admin-field select,.admin-field textarea{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:.75rem;background:#0b1730;padding:.75rem .85rem;color:#fff;outline:none}.admin-field input:focus,.admin-field select:focus,.admin-field textarea:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.1)}.admin-button{display:flex;width:100%;align-items:center;justify-content:center;gap:.5rem;border-radius:.75rem;background:#67e8f9;padding:.8rem;font-weight:900;color:#071126}
