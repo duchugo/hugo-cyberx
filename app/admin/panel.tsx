@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Gift,
+  LogOut,
   Package,
   Pencil,
   Save,
@@ -23,9 +24,18 @@ type App = {
   price: string;
   purchaseNote: string;
 };
-export default function AdminPanel({ email }: { email: string }) {
+export default function AdminPanel({
+  email,
+  accessToken,
+  onSignOut,
+}: {
+  email: string;
+  accessToken: string;
+  onSignOut: () => void;
+}) {
   const [apps, setApps] = useState<App[]>([]),
     [note, setNote] = useState("");
+  const authorization = { Authorization: `Bearer ${accessToken}` };
   const load = () =>
     fetch("/api/apps")
       .then((r) => r.json())
@@ -38,16 +48,16 @@ export default function AdminPanel({ email }: { email: string }) {
     try{
       setNote("Đang chuẩn bị tải file...");
       const meta=Object.fromEntries([...fd.entries()].filter(([k])=>k!=="file").map(([k,v])=>[k,String(v)]));
-      const init=await fetch("/api/uploads/init",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({fileName:file.name,contentType:file.type})});
+      const init=await fetch("/api/uploads/init",{method:"POST",headers:{...authorization,"content-type":"application/json"},body:JSON.stringify({fileName:file.name,contentType:file.type})});
       const job=await init.json();if(!init.ok)throw new Error(job.error||"Không thể bắt đầu tải file.");
       const chunkSize=8*1024*1024,parts:{partNumber:number;etag:string}[]=[];
       for(let start=0,partNumber=1;start<file.size;start+=chunkSize,partNumber++){
         const end=Math.min(start+chunkSize,file.size);setNote(`Đang tải lên ${Math.round(start/file.size*100)}%...`);
-        const r=await fetch(`/api/uploads/part?key=${encodeURIComponent(job.key)}&uploadId=${encodeURIComponent(job.uploadId)}&partNumber=${partNumber}`,{method:"PUT",body:file.slice(start,end)});
+        const r=await fetch(`/api/uploads/part?key=${encodeURIComponent(job.key)}&uploadId=${encodeURIComponent(job.uploadId)}&partNumber=${partNumber}`,{method:"PUT",headers:authorization,body:file.slice(start,end)});
         const p=await r.json();if(!r.ok)throw new Error(p.error||`Lỗi tại phần ${partNumber}.`);parts.push(p);
       }
       setNote("Đang hoàn tất...");
-      const done=await fetch("/api/uploads/complete",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...meta,...job,size:file.size,parts})});
+      const done=await fetch("/api/uploads/complete",{method:"POST",headers:{...authorization,"content-type":"application/json"},body:JSON.stringify({...meta,...job,size:file.size,parts})});
       const result=await done.json();if(!done.ok)throw new Error(result.error||"Không thể hoàn tất.");
       setNote("Đã tải lên và đăng phần mềm thành công.");
       form.reset();
@@ -64,7 +74,7 @@ export default function AdminPanel({ email }: { email: string }) {
     const price = a.saleType === "paid" ? prompt("Giá bán", a.price) ?? a.price : "";
     const r = await fetch("/api/apps", {
       method: "PATCH",
-      headers: { "content-type": "application/json" },
+      headers: { ...authorization, "content-type": "application/json" },
       body: JSON.stringify({ ...a, name, version, description, price }),
     });
     setNote(r.ok ? "Đã cập nhật phần mềm." : "Không thể cập nhật.");
@@ -72,13 +82,14 @@ export default function AdminPanel({ email }: { email: string }) {
   }
   async function remove(id: string) {
     if (!confirm("Xóa phần mềm và file cài đặt này?")) return;
-    await fetch(`/api/apps?id=${id}`, { method: "DELETE" });
+    await fetch(`/api/apps?id=${id}`, { method: "DELETE", headers: authorization });
     load();
   }
   async function saveBank(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const r = await fetch("/api/settings", {
       method: "POST",
+      headers: authorization,
       body: new FormData(e.currentTarget),
     });
     setNote(r.ok ? "Đã lưu thông tin cảm ơn." : "Không thể lưu.");
@@ -93,7 +104,12 @@ export default function AdminPanel({ email }: { email: string }) {
           >
             <ArrowLeft size={17} /> Hugo Cyberx
           </a>
-          <span className="text-sm text-slate-400">{email}</span>
+          <div className="flex items-center gap-3">
+            <span className="hidden text-sm text-slate-400 sm:inline">{email}</span>
+            <button onClick={onSignOut} className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm font-bold text-slate-300 hover:bg-white/5">
+              <LogOut size={16} /> Đăng xuất
+            </button>
+          </div>
         </div>
       </header>
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 lg:grid-cols-[1.15fr_.85fr]">

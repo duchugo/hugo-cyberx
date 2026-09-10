@@ -223,7 +223,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               </div>
               <h3 className="mt-5 text-xl font-black">{a.name}</h3>
               <p className={`mt-2 text-sm font-black ${a.saleType === "paid" ? "text-fuchsia-300" : "text-emerald-300"}`}>{a.saleType === "paid" ? (a.price || "Liên hệ báo giá") : "Miễn phí"}</p>
-              <p className="mt-3 min-h-[72px] text-[15px] leading-6 text-slate-400">
+              <p className="mt-3 min-h-[72px] whitespace-pre-line text-[15px] leading-6 text-slate-400">
                 {a.description}
               </p>
               <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
@@ -366,8 +366,8 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               </p>
             </div>
           </div>
-          <p className="mt-6 leading-7 text-slate-300">{detail.description}</p>
-          {detail.saleType === "paid" && <div className="mt-5 rounded-xl border border-fuchsia-400/20 bg-fuchsia-400/[.08] p-4"><strong className="text-fuchsia-200">Giá: {detail.price || "Liên hệ báo giá"}</strong><p className="mt-2 text-sm leading-6 text-slate-300">{detail.purchaseNote || "Liên hệ Nguyễn Văn Đức qua số 0978.39.55.39 để mua và nhận phần mềm."}</p></div>}
+          <p className="mt-6 whitespace-pre-line leading-7 text-slate-300">{detail.description}</p>
+          {detail.saleType === "paid" && <div className="mt-5 rounded-xl border border-fuchsia-400/20 bg-fuchsia-400/[.08] p-4"><strong className="text-fuchsia-200">Giá: {detail.price || "Liên hệ báo giá"}</strong><p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-300">{detail.purchaseNote || "Liên hệ Nguyễn Văn Đức qua số 0978.39.55.39 để mua và nhận phần mềm."}</p></div>}
           <div className="mt-5 grid grid-cols-2 gap-3">
             <Stat label="Dung lượng" value={detail.size} />
             <Stat label="Danh mục" value={detail.category} />

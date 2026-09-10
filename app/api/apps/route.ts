@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getBucket, getRawDb } from "@/db";
-import { isAdminEmail } from "@/db/owner";
-const user = (req: NextRequest) =>
-  req.headers.get("oai-authenticated-user-id") ||
-  (process.env.NODE_ENV === "development" ? "local-user" : null);
-const admin=(req:NextRequest)=>process.env.NODE_ENV==="development"||isAdminEmail(req.headers.get("oai-authenticated-user-email"));
+import { getAdminIdentity } from "@/app/api/admin-auth";
 const bytes = (n: number) =>
   n < 1048576
     ? `${Math.max(1, Math.round(n / 1024))} KB`
@@ -33,7 +29,8 @@ export async function GET() {
   }
 }
 export async function POST(req: NextRequest) {
-  if (!admin(req))
+  const identity = await getAdminIdentity(req);
+  if (!identity)
     return NextResponse.json(
       { error: "Không có quyền quản trị." },
       { status: 403 },
@@ -86,7 +83,7 @@ export async function POST(req: NextRequest) {
         price,
         purchaseNote,
         Date.now(),
-        user(req),
+        identity.id,
       )
       .run();
     return NextResponse.json(
@@ -114,7 +111,7 @@ export async function POST(req: NextRequest) {
   }
 }
 export async function PATCH(req: NextRequest) {
-  if (!admin(req))
+  if (!(await getAdminIdentity(req)))
     return NextResponse.json({ error: "Không có quyền." }, { status: 403 });
   const b = await req.json();
   await getRawDb()
@@ -137,7 +134,7 @@ export async function PATCH(req: NextRequest) {
   return NextResponse.json({ ok: true });
 }
 export async function DELETE(req: NextRequest) {
-  if (!admin(req))
+  if (!(await getAdminIdentity(req)))
     return NextResponse.json({ error: "Không có quyền." }, { status: 403 });
   const id = new URL(req.url).searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Thiếu mã." }, { status: 400 });

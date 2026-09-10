@@ -1,4 +1,29 @@
-import { NextRequest,NextResponse } from "next/server";
-import { getBucket,getRawDb } from "@/db";
-import { authorized,denied } from "../shared";
-export async function POST(req:NextRequest){if(!authorized(req))return denied();try{const b=await req.json();if(!String(b.key||"").startsWith("installers/")||!b.uploadId||!Array.isArray(b.parts))return NextResponse.json({error:"Thông tin hoàn tất không hợp lệ."},{status:400});await getBucket().resumeMultipartUpload(b.key,b.uploadId).complete(b.parts);const saleType=b.saleType==="paid"?"paid":"free";await getRawDb().prepare("INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(b.id,String(b.name||"").trim(),String(b.description||"").trim(),b.platform||"Windows",b.version||"1.0.0",Number(b.size)||0,b.category||"Tiện ích",b.color||"#16D9E3",b.key,0,saleType,String(b.price||""),String(b.purchaseNote||""),Date.now(),req.headers.get("oai-authenticated-user-id")||"admin").run();return NextResponse.json({ok:true})}catch(e){console.error(e);return NextResponse.json({error:"File đã tải nhưng không thể hoàn tất lưu phần mềm. Vui lòng thử lại."},{status:500})}}
+import { NextRequest, NextResponse } from "next/server";
+import { getBucket, getRawDb } from "@/db";
+import { authorized, denied } from "../shared";
+
+export async function POST(req: NextRequest) {
+  const identity = await authorized(req);
+  if (!identity) return denied();
+  try {
+    const b = await req.json();
+    if (!String(b.key || "").startsWith("installers/") || !b.uploadId || !Array.isArray(b.parts)) {
+      return NextResponse.json({ error: "Thông tin hoàn tất không hợp lệ." }, { status: 400 });
+    }
+    await getBucket().resumeMultipartUpload(b.key, b.uploadId).complete(b.parts);
+    const saleType = b.saleType === "paid" ? "paid" : "free";
+    await getRawDb()
+      .prepare("INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+      .bind(
+        b.id, String(b.name || "").trim(), String(b.description || "").trim(),
+        b.platform || "Windows", b.version || "1.0.0", Number(b.size) || 0,
+        b.category || "Tiện ích", b.color || "#16D9E3", b.key, 0, saleType,
+        String(b.price || ""), String(b.purchaseNote || ""), Date.now(), identity.id,
+      )
+      .run();
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "File đã tải nhưng không thể hoàn tất lưu phần mềm. Vui lòng thử lại." }, { status: 500 });
+  }
+}
