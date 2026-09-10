@@ -10,4 +10,6 @@ const clientDir = join(process.cwd(), "dist", "client");
 await rm(join(clientDir, "_worker.js"), { force: true });
 await cp(serverDir, clientDir, { recursive: true, force: true });
 await copyFile(join(serverDir, "index.js"), join(clientDir, "_worker.js"));
-await rm(join(clientDir, "index.js"), { force: true });
+// Pages bundles `_worker.js`, while the generated SSR module dynamically
+// imports `../index.js`, so both entrypoint names must remain available.
+await rm(join(clientDir, "wrangler.json"), { force: true });
