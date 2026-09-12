@@ -8,6 +8,7 @@ const bytes = (n: number) =>
 const shape = (r: Record<string, unknown>) => ({
   ...r,
   size: bytes(Number(r.sizeBytes)),
+  logoUrl: `/api/apps/logo?id=${encodeURIComponent(String(r.id))}`,
   icon: String(r.name)
     .split(/\s+/)
     .map((v) => v[0])
@@ -142,7 +143,7 @@ export async function DELETE(req: NextRequest) {
     .prepare("SELECT object_key FROM applications WHERE id=?")
     .bind(id)
     .first<{ object_key: string }>();
-  if (row) await getBucket().delete(row.object_key);
+  if (row) await getBucket().delete([row.object_key, `logos/${id}`]);
   await getRawDb()
     .prepare("DELETE FROM applications WHERE id=?")
     .bind(id)

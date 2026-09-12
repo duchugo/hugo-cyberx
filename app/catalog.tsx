@@ -31,6 +31,7 @@ type App = {
   saleType: "free" | "paid";
   price?: string;
   purchaseNote?: string;
+  logoUrl?: string;
 };
 type Settings = {
   bankName?: string;
@@ -210,12 +211,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               className="group rounded-3xl border border-white/10 bg-white/[.055] p-5 transition hover:-translate-y-1 hover:border-cyan-300/35"
             >
               <div className="flex items-start justify-between">
-                <span
-                  className="grid h-16 w-16 place-items-center rounded-[19px] text-xl font-black text-[#061126] shadow-lg"
-                  style={{ background: a.color }}
-                >
-                  {a.icon}
-                </span>
+                <AppLogo app={a} />
                 <span className="flex items-center gap-2 rounded-full bg-white/[.07] px-3 py-1.5 text-xs font-bold text-slate-300">
                   {picon(a.platform, 15)}
                   {a.platform}
@@ -352,12 +348,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       {detail && (
         <Modal close={() => setDetail(null)}>
           <div className="flex items-center gap-4">
-            <span
-              className="grid h-16 w-16 place-items-center rounded-2xl text-xl font-black text-[#071126]"
-              style={{ background: detail.color }}
-            >
-              {detail.icon}
-            </span>
+            <AppLogo app={detail} />
             <div>
               <h2 className="text-2xl font-black">{detail.name}</h2>
               <p className="mt-1 flex items-center gap-2 text-sm text-slate-400">
@@ -388,6 +379,13 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       )}
     </main>
   );
+}
+function AppLogo({ app }: { app: App }) {
+  const [failedUrl, setFailedUrl] = useState("");
+  if (!app.logoUrl || failedUrl === app.logoUrl) {
+    return <span className="grid h-16 w-16 shrink-0 place-items-center rounded-[19px] text-xl font-black text-[#061126] shadow-lg" style={{ background: app.color }}>{app.icon}</span>;
+  }
+  return <span className="h-16 w-16 shrink-0 overflow-hidden rounded-[19px] bg-white/5 shadow-lg"><img src={app.logoUrl} alt={`Logo ${app.name}`} className="h-full w-full object-contain p-1" onError={() => setFailedUrl(app.logoUrl || "")} /></span>;
 }
 function Services(){return <section id="dich-vu" className="border-y border-cyan-300/10 bg-gradient-to-b from-cyan-300/[.04] to-fuchsia-500/[.04]"><div className="mx-auto max-w-[1240px] px-5 py-16 lg:px-8"><div className="max-w-2xl"><p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Dịch vụ Hugo Cyberx</p><h2 className="mt-2 text-3xl font-black sm:text-4xl">Biến ý tưởng thành sản phẩm</h2><p className="mt-4 leading-7 text-slate-400">Nhận tư vấn và thực hiện giải pháp công nghệ theo nhu cầu cá nhân, cửa hàng và doanh nghiệp.</p></div><div className="mt-8 grid gap-5 md:grid-cols-2"><article className="rounded-3xl border border-white/10 bg-white/[.055] p-6"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span><h3 className="mt-5 text-xl font-black">Lập trình theo yêu cầu</h3><p className="mt-3 leading-7 text-slate-400">Website, công cụ nội bộ, tự động hóa quy trình và phần mềm phù hợp với nhu cầu thực tế.</p></article><article className="rounded-3xl border border-white/10 bg-white/[.055] p-6"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span><h3 className="mt-5 text-xl font-black">Sản xuất video AI</h3><p className="mt-3 leading-7 text-slate-400">Video quảng cáo, giới thiệu sản phẩm và nội dung truyền thông được thiết kế theo yêu cầu.</p></article></div><div id="lien-he" className="mt-6 flex flex-col gap-5 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-sm text-slate-400">Trao đổi trực tiếp với</p><h3 className="mt-1 text-xl font-black">Nguyễn Văn Đức</h3><p className="mt-1 font-bold text-cyan-300">0978.39.55.39</p></div><a href="tel:0978395539" className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-300 px-6 py-3 font-black text-[#071126]"><Phone size={18}/> Gọi tư vấn</a></div></div></section>}
 function Modal({

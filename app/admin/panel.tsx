@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Gift,
+  ImageUp,
   LogOut,
   Package,
   Pencil,
@@ -24,6 +25,7 @@ type App = {
   saleType: "free" | "paid";
   price: string;
   purchaseNote: string;
+  logoUrl?: string;
 };
 export default function AdminPanel({
   email,
@@ -48,7 +50,8 @@ export default function AdminPanel({
     if(!(file instanceof File)||!file.size){setNote("Vui lòng chọn file cài đặt.");return}
     try{
       setNote("Đang chuẩn bị tải file...");
-      const meta=Object.fromEntries([...fd.entries()].filter(([k])=>k!=="file").map(([k,v])=>[k,String(v)]));
+      const logo=fd.get("logo");
+      const meta=Object.fromEntries([...fd.entries()].filter(([k])=>k!=="file"&&k!=="logo").map(([k,v])=>[k,String(v)]));
       const init=await fetch("/api/uploads/init",{method:"POST",headers:{...authorization,"content-type":"application/json"},body:JSON.stringify({fileName:file.name,contentType:file.type})});
       const job=await init.json();if(!init.ok)throw new Error(job.error||"Không thể bắt đầu tải file.");
       const chunkSize=8*1024*1024,parts:{partNumber:number;etag:string}[]=[];
@@ -60,10 +63,30 @@ export default function AdminPanel({
       setNote("Đang hoàn tất...");
       const done=await fetch("/api/uploads/complete",{method:"POST",headers:{...authorization,"content-type":"application/json"},body:JSON.stringify({...meta,...job,size:file.size,parts})});
       const result=await done.json();if(!done.ok)throw new Error(result.error||"Không thể hoàn tất.");
-      setNote("Đã tải lên và đăng phần mềm thành công.");
+      let logoWarning = "";
+      if (logo instanceof File && logo.size) {
+        try {
+          await uploadLogo(job.id, logo);
+        } catch (error) {
+          logoWarning = error instanceof Error ? error.message : "Không thể lưu logo.";
+        }
+      }
+      setNote(logoWarning ? `Phần mềm đã đăng, nhưng logo chưa lưu được: ${logoWarning}` : "Đã tải lên và đăng phần mềm thành công.");
       form.reset();
       load();
     }catch(err){setNote(err instanceof Error?err.message:"Không thể đăng phần mềm.")}
+  }
+  async function uploadLogo(id: string, logo: File) {
+    const data = new FormData();
+    data.set("logo", logo);
+    const response = await fetch(`/api/apps/logo?id=${encodeURIComponent(id)}`, {
+      method: "POST",
+      headers: authorization,
+      body: data,
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Không thể lưu logo.");
+    setApps((current) => current.map((app) => app.id === id ? { ...app, logoUrl: result.logoUrl } : app));
   }
   async function edit(a: App) {
     const name = prompt("Tên phần mềm", a.name);
@@ -209,6 +232,9 @@ export default function AdminPanel({
                 />
               </Field>
             </div>
+            <Field label="Logo ứng dụng (PNG, JPG hoặc WEBP; tối đa 2 MB)">
+              <input name="logo" type="file" accept="image/png,image/jpeg,image/webp" />
+            </Field>
             <button className="admin-button">
               <Upload size={17} /> Tải lên và đăng
             </button>
@@ -216,12 +242,7 @@ export default function AdminPanel({
           <div className="mt-6 space-y-3">
             {apps.map((a) => (
               <div key={a.id} className="admin-card flex items-center gap-3">
-                <span
-                  className="grid h-11 w-11 place-items-center rounded-xl font-black text-slate-950"
-                  style={{ background: a.color }}
-                >
-                  {a.name.slice(0, 2).toUpperCase()}
-                </span>
+                <AdminLogo app={a} />
                 <div className="min-w-0 flex-1">
                   <strong className="block truncate">{a.name}</strong>
                   <span className="text-sm text-slate-400">
@@ -235,6 +256,23 @@ export default function AdminPanel({
                 >
                   <Pencil size={18} />
                 </button>
+                <label
+                  className="cursor-pointer rounded-lg p-2 text-fuchsia-300 hover:bg-fuchsia-300/10"
+                  title="Tải lên hoặc thay logo"
+                >
+                  <ImageUp size={18} />
+                  <span className="sr-only">Thay logo {a.name}</span>
+                  <input
+                    className="hidden"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={(event) => {
+                      const logo = event.currentTarget.files?.[0];
+                      event.currentTarget.value = "";
+                      if (logo) void uploadLogo(a.id, logo).then(() => setNote(`Đã cập nhật logo ${a.name}.`)).catch((error) => setNote(error.message));
+                    }}
+                  />
+                </label>
                 <label
                   className="cursor-pointer rounded-lg p-2 text-emerald-300 hover:bg-emerald-300/10"
                   title="Thay file và cập nhật phiên bản"
@@ -315,6 +353,13 @@ export default function AdminPanel({
       </div>
     </main>
   );
+}
+function AdminLogo({ app }: { app: App }) {
+  const [failedUrl, setFailedUrl] = useState("");
+  if (!app.logoUrl || failedUrl === app.logoUrl) {
+    return <span className="grid h-11 w-11 place-items-center rounded-xl font-black text-slate-950" style={{ background: app.color }}>{app.name.slice(0, 2).toUpperCase()}</span>;
+  }
+  return <span className="h-11 w-11 overflow-hidden rounded-xl bg-white/5"><img src={app.logoUrl} alt={`Logo ${app.name}`} className="h-full w-full object-contain p-1" onError={() => setFailedUrl(app.logoUrl || "")} /></span>;
 }
 function Field({
   label,
