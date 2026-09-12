@@ -6,6 +6,7 @@ import {
   LogOut,
   Package,
   Pencil,
+  RefreshCw,
   Save,
   Trash2,
   Upload,
@@ -79,6 +80,46 @@ export default function AdminPanel({
     });
     setNote(r.ok ? "Đã cập nhật phần mềm." : "Không thể cập nhật.");
     if (r.ok) load();
+  }
+  async function replaceVersion(a: App, file: File) {
+    const version = prompt("Nhập số phiên bản mới", a.version);
+    if (!version?.trim()) return;
+    if (!confirm(`Cập nhật ${a.name} lên phiên bản ${version.trim()}?`)) return;
+    try {
+      setNote(`Đang chuẩn bị phiên bản ${version.trim()}...`);
+      const init = await fetch("/api/uploads/init", {
+        method: "POST",
+        headers: { ...authorization, "content-type": "application/json" },
+        body: JSON.stringify({ fileName: file.name, contentType: file.type }),
+      });
+      const job = await init.json();
+      if (!init.ok) throw new Error(job.error || "Không thể bắt đầu tải file.");
+      const chunkSize = 8 * 1024 * 1024;
+      const parts: { partNumber: number; etag: string }[] = [];
+      for (let start = 0, partNumber = 1; start < file.size; start += chunkSize, partNumber++) {
+        const end = Math.min(start + chunkSize, file.size);
+        setNote(`Đang tải phiên bản mới ${Math.round((start / file.size) * 100)}%...`);
+        const response = await fetch(
+          `/api/uploads/part?key=${encodeURIComponent(job.key)}&uploadId=${encodeURIComponent(job.uploadId)}&partNumber=${partNumber}`,
+          { method: "PUT", headers: authorization, body: file.slice(start, end) },
+        );
+        const part = await response.json();
+        if (!response.ok) throw new Error(part.error || `Lỗi tại phần ${partNumber}.`);
+        parts.push(part);
+      }
+      setNote("Đang chuyển sang phiên bản mới...");
+      const done = await fetch("/api/uploads/complete", {
+        method: "POST",
+        headers: { ...authorization, "content-type": "application/json" },
+        body: JSON.stringify({ ...job, replaceId: a.id, version: version.trim(), size: file.size, parts }),
+      });
+      const result = await done.json();
+      if (!done.ok) throw new Error(result.error || "Không thể hoàn tất cập nhật.");
+      setNote(`Đã cập nhật ${a.name} lên phiên bản ${version.trim()}. Lượt tải cũ được giữ nguyên.`);
+      load();
+    } catch (error) {
+      setNote(error instanceof Error ? error.message : "Không thể cập nhật phiên bản.");
+    }
   }
   async function remove(id: string) {
     if (!confirm("Xóa phần mềm và file cài đặt này?")) return;
@@ -194,6 +235,23 @@ export default function AdminPanel({
                 >
                   <Pencil size={18} />
                 </button>
+                <label
+                  className="cursor-pointer rounded-lg p-2 text-emerald-300 hover:bg-emerald-300/10"
+                  title="Thay file và cập nhật phiên bản"
+                >
+                  <RefreshCw size={18} />
+                  <span className="sr-only">Cập nhật phiên bản {a.name}</span>
+                  <input
+                    className="hidden"
+                    type="file"
+                    accept=".exe,.msi,.zip,.apk,.ipa"
+                    onChange={(event) => {
+                      const file = event.currentTarget.files?.[0];
+                      event.currentTarget.value = "";
+                      if (file) void replaceVersion(a, file);
+                    }}
+                  />
+                </label>
                 <button
                   onClick={() => remove(a.id)}
                   className="rounded-lg p-2 text-rose-400 hover:bg-rose-400/10"
