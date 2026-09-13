@@ -27,6 +27,12 @@ type App = {
   purchaseNote: string;
   logoUrl?: string;
 };
+type BankSettings = {
+  bankName?: string | null;
+  accountNumber?: string | null;
+  accountName?: string | null;
+  thankYouText?: string | null;
+};
 export default function AdminPanel({
   email,
   accessToken,
@@ -38,12 +44,36 @@ export default function AdminPanel({
 }) {
   const [apps, setApps] = useState<App[]>([]),
     [note, setNote] = useState("");
+  const [bank, setBank] = useState({
+    bankName: "",
+    accountNumber: "",
+    accountName: "",
+    thankYouText: "Cảm ơn bạn đã đồng hành cùng Hugo Cyberx!",
+  });
   const authorization = { Authorization: `Bearer ${accessToken}` };
   const load = () =>
     fetch("/api/apps")
       .then((r) => r.json())
       .then(setApps);
   useEffect(load, []);
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => r.json() as Promise<BankSettings>)
+      .then((s) =>
+        setBank({
+          bankName: s.bankName || "",
+          accountNumber: s.accountNumber || "",
+          accountName: s.accountName || "",
+          thankYouText: s.thankYouText || "Cảm ơn bạn đã đồng hành cùng Hugo Cyberx!",
+        }),
+      )
+      .catch(() => {});
+  }, []);
+  const bankField = (name: keyof typeof bank) => ({
+    value: bank[name],
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setBank((current) => ({ ...current, [name]: e.target.value })),
+  });
   async function add(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form=e.currentTarget,fd=new FormData(form),file=fd.get("file");
@@ -313,19 +343,19 @@ export default function AdminPanel({
               Người dùng có thể ủng hộ tùy tâm; phần mềm vẫn hoàn toàn miễn phí.
             </p>
             <Field label="Ngân hàng">
-              <input name="bankName" placeholder="Ví dụ: Vietcombank" />
+              <input name="bankName" placeholder="Ví dụ: Vietcombank" {...bankField("bankName")} />
             </Field>
             <Field label="Số tài khoản">
-              <input name="accountNumber" />
+              <input name="accountNumber" {...bankField("accountNumber")} />
             </Field>
             <Field label="Tên chủ tài khoản">
-              <input name="accountName" />
+              <input name="accountName" {...bankField("accountName")} />
             </Field>
             <Field label="Lời cảm ơn">
               <textarea
                 name="thankYouText"
                 rows={3}
-                defaultValue="Cảm ơn bạn đã đồng hành cùng Hugo Cyberx!"
+                {...bankField("thankYouText")}
               />
             </Field>
             <Field label="Ảnh mã QR">

@@ -28,9 +28,16 @@ export async function POST(req: NextRequest) {
     .first<{ qr_object_key: string | null }>();
   let key = old?.qr_object_key || null;
   if (qr instanceof File && qr.size) {
-    if (key) await getBucket().delete(key);
-    key = `brand/donation-qr-${Date.now()}.png`;
-    await getBucket().put(key, qr.stream(), { httpMetadata: { contentType: qr.type || "image/png" } });
+    const newKey = `brand/donation-qr-${Date.now()}.png`;
+    await getBucket().put(newKey, qr.stream(), { httpMetadata: { contentType: qr.type || "image/png" } });
+    key = newKey;
+    if (old?.qr_object_key && old.qr_object_key !== newKey) {
+      try {
+        await getBucket().delete(old.qr_object_key);
+      } catch (error) {
+        console.error("Unable to remove previous donation QR", error);
+      }
+    }
   }
   await getRawDb()
     .prepare("INSERT INTO site_settings (id,bank_name,account_number,account_name,qr_object_key,thank_you_text) VALUES (1,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET bank_name=excluded.bank_name,account_number=excluded.account_number,account_name=excluded.account_name,qr_object_key=excluded.qr_object_key,thank_you_text=excluded.thank_you_text")
