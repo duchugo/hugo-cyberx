@@ -112,17 +112,17 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               </small>
             </span>
           </a>
-          <nav className="hidden items-center gap-8 text-sm font-bold text-slate-300 md:flex">
-            <a href="/" className={mode === "free" ? "text-cyan-300" : ""}>Miễn phí</a>
-            <a href="/phan-mem-tra-phi" className={mode === "paid" ? "text-fuchsia-300" : ""}>Trả phí</a>
-            <a href="/dich-vu" className={mode === "services" ? "text-cyan-300" : ""}>Dịch vụ</a>
-          </nav>
           {mode === "free" && <button
             onClick={() => setThanks(true)}
             className="hidden items-center gap-2 rounded-xl border border-fuchsia-400/40 bg-fuchsia-400/10 px-4 py-2.5 text-sm font-extrabold text-fuchsia-200 sm:flex"
           >
             <Gift size={17} /> Cảm ơn tác giả
           </button>}
+          <nav className="hidden items-center gap-8 text-sm font-bold text-slate-300 md:flex">
+            <a href="/" className={mode === "free" ? "text-cyan-300" : ""}>Miễn phí</a>
+            <a href="/phan-mem-tra-phi" className={mode === "paid" ? "text-fuchsia-300" : ""}>Trả phí</a>
+            <a href="/dich-vu" className={mode === "services" ? "text-cyan-300" : ""}>Dịch vụ</a>
+          </nav>
           <button
             onClick={() => setMenu((v) => !v)}
             className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 md:hidden"
@@ -268,6 +268,21 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
         </div>
       </section>}
       {mode === "services" && <Services />}
+      {mode !== "free" && <section className="border-y border-cyan-300/10 bg-white/[.025]">
+        <div className="mx-auto flex max-w-[1240px] flex-col items-center gap-6 px-5 py-12 text-center sm:flex-row sm:justify-center sm:text-left lg:px-8">
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fzalo.me%2Fg%2F9uhvognikj5se34j0v8v"
+            alt="Mã QR tham gia nhóm Zalo Hugo Cyberx"
+            className="h-44 w-44 rounded-2xl bg-white p-2"
+          />
+          <div>
+            <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Cộng đồng Hugo Cyberx</p>
+            <h2 className="mt-2 text-2xl font-black">Tham gia nhóm Zalo để giao lưu và được hướng dẫn</h2>
+            <p className="mt-2 max-w-xl leading-7 text-slate-400">Quét mã QR hoặc mở liên kết để trao đổi, nhận hỗ trợ sử dụng phần mềm và chia sẻ kinh nghiệm cùng mọi người.</p>
+            <a href="https://zalo.me/g/9uhvognikj5se34j0v8v" target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-5 py-3 font-black text-[#071126]">Mở nhóm Zalo</a>
+          </div>
+        </div>
+      </section>}
       {mode === "free" && <section className="mx-auto max-w-4xl px-5 py-14 text-center">
         <h2 className="text-3xl font-black">Bạn thấy phần mềm hữu ích?</h2>
         <p className="mx-auto mt-3 max-w-xl leading-7 text-slate-400">
