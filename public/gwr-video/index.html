@@ -75,6 +75,33 @@
   </script>
   <script src="video-app.js"></script>
   <script>
+    // The parent page hands the selected video over through the one-record
+    // IndexedDB cache. Once the engine has loaded it, drop the record so no
+    // copy stays on the user's device after processing.
+    (()=>{
+      const HANDOFF_DB="gwr-debug-file-handoff",HANDOFF_STORE="files",HANDOFF_KEY="latest";
+      const purgeRecord=()=>{
+        try{
+          const request=indexedDB.open(HANDOFF_DB,1);
+          request.onupgradeneeded=()=>request.transaction?.abort();
+          request.onsuccess=()=>{
+            const database=request.result;
+            try{
+              if(database.objectStoreNames.contains(HANDOFF_STORE))
+                database.transaction(HANDOFF_STORE,"readwrite").objectStore(HANDOFF_STORE).delete(HANDOFF_KEY);
+            }catch{}
+            database.close();
+          };
+          request.onerror=()=>{};
+        }catch{}
+      };
+      const video=document.getElementById("originalVideo");
+      if(!video)return;
+      if(video.readyState>=1)purgeRecord();
+      else video.addEventListener("loadedmetadata",purgeRecord,{once:true});
+    })();
+  </script>
+  <script>
     (()=>{
       const dictionary=[
         [/视频水印检测置信度偏低，已停止导出。可打开低置信导出后重试。/g,"Độ tin cậy nhận diện watermark thấp nên quá trình xuất video đã dừng."],
