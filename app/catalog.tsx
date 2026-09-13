@@ -122,6 +122,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <a href="/" className={mode === "free" ? "text-cyan-300" : ""}>Miễn phí</a>
             <a href="/phan-mem-tra-phi" className={mode === "paid" ? "text-fuchsia-300" : ""}>Trả phí</a>
             <a href="/dich-vu" className={mode === "services" ? "text-cyan-300" : ""}>Dịch vụ</a>
+            <a href="/gemini-watermark" className="text-emerald-300">Xóa logo Gemini</a>
           </nav>
           <button
             onClick={() => setMenu((v) => !v)}
@@ -135,6 +136,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <a href="/" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Phần mềm miễn phí</a>
             <a href="/phan-mem-tra-phi" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Phần mềm trả phí</a>
             <a href="/dich-vu" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Dịch vụ</a>
+            <a href="/gemini-watermark" className="block rounded-xl bg-white/5 px-4 py-3 font-bold text-emerald-300">Xóa logo Gemini</a>
             {mode === "free" && <button
               onClick={() => setThanks(true)}
               className="w-full rounded-xl bg-fuchsia-500 py-3 font-bold"

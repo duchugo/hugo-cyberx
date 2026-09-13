@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Xóa watermark video</title>
+  <style>
+    :root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--panel:#0f172a;--soft:#172033;--border:rgba(255,255,255,.11);--text:#f8fafc;--muted:#94a3b8;--cyan:#67e8f9;--cyan2:#22d3ee}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:transparent;color:var(--text)}body{line-height:1.5}button,input,select{font:inherit}.shell{width:100%}header,#dropzone,.metadata-panel,.detection-panel,.note{display:none}.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:20px;align-items:start}.panel{overflow:hidden;border:1px solid var(--border);border-radius:16px;background:rgba(15,23,42,.82)}.panel-head{display:flex;min-height:48px;align-items:center;justify-content:space-between;gap:16px;padding:0 18px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700}#progressText{color:var(--cyan);font-variant-numeric:tabular-nums}.compare-player{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:1px;aspect-ratio:16/9;background:var(--border)}.compare-pane{position:relative;overflow:hidden;background:#020617}.compare-pane video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.compare-pane[hidden],.badge[hidden],.empty[hidden]{display:none}.badge{position:absolute;top:12px;left:12px;z-index:2;padding:4px 9px;border-radius:6px;background:rgba(2,6,23,.78);color:#fff;font-size:12px;font-weight:700;pointer-events:none}.empty{position:absolute;inset:0;z-index:1;display:grid;place-items:center;padding:20px;color:var(--muted);text-align:center;font-size:13px;pointer-events:none}.compare-controls{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--border)}.play-toggle{display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--border);border-radius:999px;background:var(--soft);color:#fff;cursor:pointer}.play-toggle::before{content:"";width:0;height:0;margin-left:2px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid currentColor}.play-toggle[data-playing="true"]::before,.play-toggle[data-playing="true"]::after{content:"";width:3px;height:11px;margin:0 1px;border:0;background:currentColor}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}button:disabled,a[aria-disabled="true"]{opacity:.45;cursor:not-allowed}input[type="range"]{width:100%;accent-color:var(--cyan2)}.time-label{min-width:48px;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;text-align:right}.side{min-width:0}.controls{display:grid;gap:14px;padding:18px}.auto-summary{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--soft);color:var(--muted);font-size:13px}.auto-summary strong{display:block;margin-bottom:4px;color:var(--text);font-size:15px}.progress{height:7px;overflow:hidden;border-radius:999px;background:rgba(148,163,184,.18)}.progress span{display:block;width:0;height:100%;background:var(--cyan2);transition:width .15s ease-out}.status{min-height:58px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:rgba(2,6,23,.45);color:var(--muted);font-size:13px}.status[data-tone="error"]{border-color:rgba(252,165,165,.45);color:#fca5a5}.status[data-tone="warn"]{border-color:rgba(253,230,138,.4);color:#fde68a}.status[data-tone="success"]{border-color:rgba(134,239,172,.4);color:#86efac}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions button,.download-link{min-height:42px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:var(--soft);color:var(--text);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}.actions .primary,.actions .download-link{grid-column:1/-1}.actions .primary{border-color:transparent;background:var(--cyan);color:#071126}.actions .download-link{border-color:rgba(134,239,172,.35);background:#22c55e;color:#052e16}.internal-controls{display:none!important}
+    @media(max-width:820px){.layout{grid-template-columns:1fr}.compare-player{min-height:320px;aspect-ratio:auto}}@media(max-width:540px){.compare-player{grid-template-columns:1fr;min-height:520px}.actions{grid-template-columns:1fr}.actions .primary,.actions .download-link{grid-column:auto}}
+  </style>
+</head>
+<body>
+  <div class="shell"><header><h1>Xóa watermark video</h1></header><main class="layout">
+    <section class="workspace" aria-label="So sánh video trước và sau xử lý"><div class="panel">
+      <div class="panel-head"><span>Xem trước kết quả</span><span id="progressText">Đang nạp video</span></div>
+      <div id="comparePlayer" class="compare-player">
+        <div class="compare-pane"><video id="originalVideo" playsinline preload="metadata"></video><span class="badge">Video gốc</span><div id="originalEmpty" class="empty">Đang nạp video đã chọn…</div></div>
+        <div class="compare-pane"><video id="processedVideo" playsinline preload="metadata" muted></video><span id="afterBadge" class="badge" hidden>Kết quả</span><div id="processedEmpty" class="empty">Video kết quả sẽ xuất hiện tại đây</div></div>
+      </div>
+      <div class="compare-controls"><button id="playPauseBtn" class="play-toggle" type="button" data-playing="false" aria-label="Phát video" disabled></button><input id="scrubber" type="range" min="0" max="1000" value="0" aria-label="Tiến độ phát video" disabled><span id="timeLabel" class="time-label">0:00</span></div>
+    </div></section>
+    <aside class="side" aria-label="Điều khiển xử lý video">
+      <div id="dropzone" class="dropzone" data-dragging="false" role="button" tabindex="0"><strong>Chọn video</strong><span class="muted">Video được xử lý trên thiết bị.</span><input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime,video/*" hidden></div>
+      <div class="panel"><div class="panel-head">Xử lý tự động</div><div class="controls">
+        <div id="autoPresetSummary" class="auto-summary"><strong>Tự động nhận diện watermark</strong><span>Nhận diện logo Gemini hoặc chữ Veo và giữ nguyên FPS, thời lượng cùng âm thanh gốc.</span></div>
+        <div class="progress" aria-label="Tiến độ xử lý"><span id="progressBar"></span></div><div id="status" class="status" data-tone="info">Đang chuẩn bị bộ xử lý cục bộ…</div>
+        <div class="actions"><button id="detectBtn" type="button">Nhận diện watermark</button><button id="resetBtn" type="button">Làm lại</button><button id="processBtn" class="primary" type="button">Xóa watermark và xuất MP4</button><a id="downloadBtn" class="download-link" aria-disabled="true">Tải video kết quả</a></div>
+        <div class="internal-controls" hidden><span id="alphaGainValue">1.00</span><input id="alphaGain" type="range" min="0.25" max="1.35" step="0.05"><input id="adaptiveAlpha" type="checkbox"><input id="highQualityCleanup" type="checkbox"><select id="denoiseBackend"><option value="none">Tắt</option><option value="canvas-edge-denoise">Canvas edge</option><option value="canvas-edge-band-denoise">Canvas band</option><option value="canvas-edge-core-denoise">Canvas core</option><option value="canvas-footprint-polish">Canvas polish</option><option value="canvas-temporal-delta-stabilize">Temporal delta</option><option value="canvas-temporal-match-delta-stabilize">Temporal match</option><option value="canvas-temporal-stabilize">Temporal</option><option value="canvas-texture-repair">Texture repair</option><option value="allenk-fdncnn-browser-spike">AI FDnCNN</option></select><button id="relocatedReviewPresetBtn" type="button">Preset</button><span id="edgeDenoiseStrengthValue">0.25</span><input id="edgeDenoiseStrength" type="range" min="0" max="1" step="0.05"><span id="residualCleanupValue">1.50</span><input id="residualCleanup" type="range" min="0" max="1.80" step="0.05"><input id="sampleCount" type="number" min="4" max="24" step="1"><input id="videoBitrateMbps" type="number" min="1" max="80" step="0.5"><input id="allowLowConfidence" type="checkbox"></div>
+      </div><div class="note">Video được mã hóa lại bằng WebCodecs và giữ âm thanh khi MP4 hỗ trợ.</div></div>
+      <div class="panel metadata-panel"><div class="panel-head">Thông tin video</div><div id="metadata"></div></div><div class="panel detection-panel"><div class="panel-head">Kết quả nhận diện</div><div id="detection"></div></div>
+    </aside>
+  </main></div>
+  <script>
+    // Flow/Veo text can score below the package's conservative confidence gate.
+    // This tool only accepts user-selected Gemini/Flow videos, so keep the
+    // detected position and let the packaged cleanup pipeline continue.
+    window.__gwrVideoOverrideAllowLowConfidence = true;
+    // Hugo Visual follows the package pass with a wider edge-anchored delogo
+    // for the small Flow/Veo wordmark. Reproduce that geometry in Canvas so
+    // the browser pipeline removes the faint fringe without requiring FFmpeg.
+    window.__gwrVeoDelogo = (context, videoWidth, videoHeight) => {
+      const large = videoWidth >= 1920 || videoHeight >= 1920;
+      const medium = !large && (videoWidth >= 1280 || videoHeight >= 1280);
+      const width = large ? 64 : medium ? 48 : 36;
+      const height = large ? 34 : medium ? 24 : 20;
+      const right = large ? 8 : medium ? 6 : 4;
+      const bottom = large ? 6 : medium ? 4 : 3;
+      const x = videoWidth - width - right;
+      const y = videoHeight - height - bottom;
+      if (x < 1 || y < 1 || x + width >= videoWidth || y + height >= videoHeight) return;
+      const source = context.getImageData(x - 1, y - 1, width + 2, height + 2);
+      const output = context.createImageData(width, height);
+      const stride = width + 2;
+      const read = (px, py, channel) => source.data[(py * stride + px) * 4 + channel];
+      for (let row = 0; row < height; row++) {
+        for (let column = 0; column < width; column++) {
+          const weights = [1 / (column + 1), 1 / (width - column), 1 / (row + 1), 1 / (height - row)];
+          const weightSum = weights[0] + weights[1] + weights[2] + weights[3];
+          const target = (row * width + column) * 4;
+          for (let channel = 0; channel < 3; channel++) {
+            output.data[target + channel] = Math.round((
+              read(0, row + 1, channel) * weights[0]
+              + read(width + 1, row + 1, channel) * weights[1]
+              + read(column + 1, 0, channel) * weights[2]
+              + read(column + 1, height + 1, channel) * weights[3]
+            ) / weightSum);
+          }
+          output.data[target + 3] = 255;
+        }
+      }
+      context.putImageData(output, x, y);
+    };
+  </script>
+  <script src="video-app.js"></script>
+  <script>
+    (()=>{
+      const dictionary=[
+        [/视频水印检测置信度偏低，已停止导出。可打开低置信导出后重试。/g,"Độ tin cậy nhận diện watermark thấp nên quá trình xuất video đã dừng."],
+        [/当前浏览器不支持 WebCodecs H\.264\/AVC 编码，请使用新版 Chrome 或 Edge。/g,"Trình duyệt không hỗ trợ mã hóa H.264 bằng WebCodecs. Hãy dùng Chrome hoặc Edge phiên bản mới."],
+        [/视频导出失败，输出为空/g,"Xuất video thất bại vì dữ liệu kết quả trống"],[/读取视频失败/g,"Không đọc được video"],[/导出失败/g,"Xuất video thất bại"],
+        [/正在本地逐帧处理，页面保持打开即可。/g,"Đang xử lý từng khung hình trên thiết bị. Hãy giữ trang này mở."],
+        [/正在检测水印候选\.\.\./g,"Đang nhận diện vị trí watermark…"],[/正在导出视频，已处理 (\d+) 帧。/g,"Đang xuất video, đã xử lý $1 khung hình."],
+        [/导出中 (\d+) 帧/g,"Đang xuất $1 khung hình"],[/AI 去水印已完成/g,"Đã xóa watermark bằng AI"],[/去水印已完成/g,"Đã xóa watermark"],
+        [/音频已保留：([^，]+)，(\d+) packets。/g," Đã giữ âm thanh: $1, $2 gói dữ liệu."],[/音频未保留：([^。]+)。/g," Không giữ được âm thanh: $1."],
+        [/已处理 (\d+) 帧。/g,"Đã xử lý $1 khung hình."],[/完成/g,"Hoàn tất"],[/检测中/g,"Đang nhận diện"],[/低置信/g,"Độ tin cậy thấp"],
+        [/AI 自动处理/g,"Tự động nhận diện watermark"],[/默认使用本地 AI 模型处理右下角 Gemini\/Veo 水印。/g,"Tự nhận diện logo Gemini hoặc chữ Veo bằng mô hình chạy trên thiết bị."],
+        [/等待视频/g,"Đang chờ video"],[/准备就绪/g,"Sẵn sàng xử lý"],[/视频已载入/g,"Đã nạp video"],[/正在读取视频/g,"Đang đọc video"],
+        [/检测水印/g,"Nhận diện watermark"],[/正在检测/g,"Đang nhận diện"],[/开始处理/g,"Bắt đầu xử lý"],[/正在处理/g,"Đang xử lý"],
+        [/导出完成/g,"Đã xuất video"],[/处理完成/g,"Xử lý hoàn tất"],[/下载结果/g,"Tải video kết quả"],[/重置/g,"Làm lại"],
+        [/原视频/g,"Video gốc"],[/视频信息/g,"Thông tin video"],[/检测结果/g,"Kết quả nhận diện"],[/未检测到/g,"Không nhận diện được"],
+        [/播放/g,"Phát video"],[/暂停/g,"Tạm dừng"],[/水印/g,"watermark"],[/帧/g," khung hình"],[/秒/g," giây"],[/错误/g,"Lỗi"],[/失败/g,"thất bại"]
+      ];
+      const localize=(value,node)=>{let result=value||"";for(const[pattern,replacement]of dictionary)result=result.replace(pattern,replacement);if(/[\u3400-\u9fff]/.test(result)){const percent=result.match(/\d+(?:\.\d+)?%/),element=node?.nodeType===Node.TEXT_NODE?node.parentElement:node,tone=element?.closest?.("#status")?.dataset?.tone;result=percent?`Đang xử lý ${percent[0]}`:tone==="error"?"Xử lý video thất bại. Hãy thử lại hoặc chọn lại video.":"Đang xử lý video trên thiết bị…"}return result};
+      const translate=root=>{
+        if(root.nodeType===Node.TEXT_NODE){const next=localize(root.nodeValue,root);if(next!==root.nodeValue)root.nodeValue=next;return}
+        if(root.nodeType!==Node.ELEMENT_NODE&&root!==document.body)return;
+        const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);while(walker.nextNode()){const node=walker.currentNode,next=localize(node.nodeValue,node);if(next!==node.nodeValue)node.nodeValue=next}
+        const elements=root.querySelectorAll?[root,...root.querySelectorAll("[aria-label],[title]")]:[];for(const element of elements){for(const name of["aria-label","title"]){const value=element.getAttribute?.(name),next=localize(value,element);if(value&&next!==value)element.setAttribute(name,next)}}
+      };
+      translate(document.body);
+      new MutationObserver(mutations=>mutations.forEach(mutation=>{if(mutation.type==="characterData")translate(mutation.target);else if(mutation.type==="attributes")translate(mutation.target);else mutation.addedNodes.forEach(translate)})).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:["aria-label","title"]});
+    })();
+  </script>
+</body>
+</html>
