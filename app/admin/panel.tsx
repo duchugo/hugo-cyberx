@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
+  BarChart3,
   Gift,
   ImageUp,
   LogOut,
@@ -33,6 +34,29 @@ type BankSettings = {
   accountName?: string | null;
   thankYouText?: string | null;
 };
+type DownloadStats = {
+  totals: { total: number; today: number; last7: number; last30: number; lastDownloadAt: number | null };
+  perApp: {
+    id: string;
+    name: string;
+    version: string;
+    totalAllTime: number;
+    total: number;
+    today: number;
+    last7: number;
+    last30: number;
+    lastDownloadAt: number | null;
+  }[];
+  recent: { name: string; version: string; fileName: string; downloadedAt: number; userAgent: string }[];
+  daily: { day: number; count: number }[];
+};
+const DAY_MS = 86_400_000;
+const formatDateTime = (ms: number) =>
+  new Date(ms).toLocaleString("vi-VN", { hour12: false, day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+const detectBrowser = (ua: string) =>
+  /edg/i.test(ua) ? "Edge" : /coccoc/i.test(ua) ? "Cốc Cốc" : /opr/i.test(ua) ? "Opera" : /firefox/i.test(ua) ? "Firefox" : /chrome/i.test(ua) ? "Chrome" : /safari/i.test(ua) ? "Safari" : "Trình duyệt khác";
+const detectPlatform = (ua: string) =>
+  /windows/i.test(ua) ? "Windows" : /android/i.test(ua) ? "Android" : /iphone|ipad/i.test(ua) ? "iOS" : /mac os/i.test(ua) ? "macOS" : /linux/i.test(ua) ? "Linux" : "Khác";
 export default function AdminPanel({
   email,
   accessToken,
@@ -50,6 +74,7 @@ export default function AdminPanel({
     accountName: "",
     thankYouText: "Cảm ơn bạn đã đồng hành cùng Hugo Cyberx!",
   });
+  const [stats, setStats] = useState<DownloadStats | null>(null);
   const authorization = { Authorization: `Bearer ${accessToken}` };
   const load = () =>
     fetch("/api/apps")
@@ -67,6 +92,12 @@ export default function AdminPanel({
           thankYouText: s.thankYouText || "Cảm ơn bạn đã đồng hành cùng Hugo Cyberx!",
         }),
       )
+      .catch(() => {});
+  }, []);
+  useEffect(() => {
+    fetch("/api/downloads/stats", { headers: authorization })
+      .then((r) => (r.ok ? (r.json() as Promise<DownloadStats>) : null))
+      .then((s) => s && setStats(s))
       .catch(() => {});
   }, []);
   const bankField = (name: keyof typeof bank) => ({
@@ -381,7 +412,112 @@ export default function AdminPanel({
           </div>
         </aside>
       </div>
+      <section className="mx-auto max-w-6xl px-5 pb-14">
+        <h2 className="flex items-center gap-2 text-2xl font-black">
+          <BarChart3 className="text-cyan-300" size={24} /> Thống kê tải xuống
+        </h2>
+        {stats ? (
+          <>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { label: "Tổng lượt tải", value: stats.totals.total },
+                { label: "Hôm nay", value: stats.totals.today },
+                { label: "7 ngày gần nhất", value: stats.totals.last7 },
+                { label: "30 ngày gần nhất", value: stats.totals.last30 },
+              ].map((card) => (
+                <div key={card.label} className="admin-card">
+                  <p className="text-sm text-slate-400">{card.label}</p>
+                  <p className="mt-1 text-3xl font-black text-cyan-200">{card.value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="admin-card mt-6">
+              <h3 className="font-bold">Lượt tải theo ngày (30 ngày gần nhất)</h3>
+              <DailyChart daily={stats.daily} />
+              <p className="mt-1 text-xs text-slate-500">
+                {formatDateTime((stats.daily[0]?.day || Math.floor(Date.now() / DAY_MS) - 29) * DAY_MS)} → hôm nay
+              </p>
+            </div>
+            <div className="admin-card mt-6 overflow-x-auto">
+              <h3 className="font-bold">Lượt tải theo phần mềm</h3>
+              <table className="mt-3 w-full text-left text-sm">
+                <thead className="text-slate-400">
+                  <tr>
+                    <th className="py-2 pr-4">Phần mềm</th>
+                    <th className="py-2 pr-4">Phiên bản</th>
+                    <th className="py-2 pr-4">Tổng</th>
+                    <th className="py-2 pr-4">Hôm nay</th>
+                    <th className="py-2 pr-4">7 ngày</th>
+                    <th className="py-2 pr-4">30 ngày</th>
+                    <th className="py-2">Lần tải gần nhất</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats.perApp.map((app) => (
+                    <tr key={app.id} className="border-t border-white/10">
+                      <td className="py-2 pr-4 font-bold">{app.name}</td>
+                      <td className="py-2 pr-4">{app.version}</td>
+                      <td className="py-2 pr-4 font-bold text-cyan-200">{app.totalAllTime}</td>
+                      <td className="py-2 pr-4">{app.today}</td>
+                      <td className="py-2 pr-4">{app.last7}</td>
+                      <td className="py-2 pr-4">{app.last30}</td>
+                      <td className="py-2">{app.lastDownloadAt ? formatDateTime(app.lastDownloadAt) : "—"}</td>
+                    </tr>
+                  ))}
+                  {stats.perApp.length === 0 && (
+                    <tr><td colSpan={7} className="py-3 text-slate-500">Chưa có lượt tải nào được ghi nhận.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="admin-card mt-6">
+              <h3 className="font-bold">Lượt tải gần nhất</h3>
+              <ul className="mt-3 space-y-2 text-sm">
+                {stats.recent.map((item, index) => (
+                  <li key={`${item.downloadedAt}-${index}`} className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-2">
+                    <span className="font-bold">{item.name} <span className="font-normal text-slate-400">v{item.version}</span></span>
+                    <span className="text-slate-400">{formatDateTime(item.downloadedAt)}</span>
+                    <span className="text-slate-500">{detectBrowser(item.userAgent)} · {detectPlatform(item.userAgent)}</span>
+                  </li>
+                ))}
+                {stats.recent.length === 0 && <li className="text-slate-500">Chưa có dữ liệu.</li>}
+              </ul>
+            </div>
+          </>
+        ) : (
+          <p className="mt-4 text-slate-400">Đang tải thống kê…</p>
+        )}
+      </section>
     </main>
+  );
+}
+function DailyChart({ daily }: { daily: { day: number; count: number }[] }) {
+  const today = Math.floor(Date.now() / DAY_MS);
+  const counts = new Map(daily.map((d) => [d.day, d.count]));
+  const points = Array.from({ length: 30 }, (_, i) => today - 29 + i).map((day) => ({
+    day,
+    count: counts.get(day) || 0,
+  }));
+  const max = Math.max(1, ...points.map((p) => p.count));
+  return (
+    <svg viewBox="0 0 300 80" className="mt-3 w-full" role="img" aria-label="Lượt tải theo ngày">
+      {points.map((point, index) => {
+        const height = (point.count / max) * 64;
+        return (
+          <rect
+            key={point.day}
+            x={index * 10 + 1}
+            y={74 - height}
+            width={8}
+            height={height}
+            rx={1}
+            fill={point.count ? "#22d3ee" : "rgba(148,163,184,.25)"}
+          >
+            <title>{`${new Date(point.day * DAY_MS).toLocaleDateString("vi-VN")}: ${point.count} lượt`}</title>
+          </rect>
+        );
+      })}
+    </svg>
   );
 }
 function AdminLogo({ app }: { app: App }) {

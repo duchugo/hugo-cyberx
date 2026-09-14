@@ -22,6 +22,13 @@
       "when": 1788954773270,
       "tag": "0002_awesome_prodigy",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1789381712287,
+      "tag": "0003_fancy_mole_man",
+      "breakpoints": true
     }
   ]
 }
