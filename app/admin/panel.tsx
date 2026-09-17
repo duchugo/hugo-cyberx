@@ -464,9 +464,9 @@ export default function AdminPanel({
               <h3 className="font-bold">Lượt tải gần nhất</h3>
               <ul className="mt-3 max-h-[40rem] space-y-2 overflow-y-auto pr-2 text-sm">
                 {stats.recent.map((item, index) => (
-                  <li key={`${item.downloadedAt}-${index}`} className="grid gap-1 border-b border-white/5 pb-2 sm:grid-cols-[minmax(0,1fr)_11rem_12rem] sm:items-center sm:gap-4">
+                  <li key={`${item.downloadedAt}-${index}`} className="grid gap-1 border-b border-white/5 pb-2 sm:grid-cols-3 sm:items-center sm:gap-4">
                     <span className="min-w-0 truncate font-bold">{item.name} <span className="font-normal text-slate-400">v{item.version}</span></span>
-                    <time className="whitespace-nowrap tabular-nums text-slate-400 sm:text-right" dateTime={new Date(item.downloadedAt).toISOString()}>{formatDateTime(item.downloadedAt)}</time>
+                    <time className="whitespace-nowrap tabular-nums text-slate-400 sm:text-center" dateTime={new Date(item.downloadedAt).toISOString()}>{formatDateTime(item.downloadedAt)}</time>
                     <span className="truncate text-slate-500 sm:text-right">{detectBrowser(item.userAgent)} · {detectPlatform(item.userAgent)}</span>
                   </li>
                 ))}
