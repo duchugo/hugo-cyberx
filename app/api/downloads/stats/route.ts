@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
         `SELECT d.version, d.file_name AS fileName, d.downloaded_at AS downloadedAt, d.user_agent AS userAgent,
                 a.name
          FROM software_downloads d JOIN applications a ON a.id = d.software_id
-         ORDER BY d.downloaded_at DESC LIMIT 10`,
+         ORDER BY d.downloaded_at DESC LIMIT 500`,
       )
       .all<Record<string, unknown>>();
     const daily = await db

@@ -6,7 +6,6 @@ import {
   Gift,
   ImageUp,
   LogOut,
-  Package,
   Pencil,
   RefreshCw,
   Save,
@@ -401,15 +400,6 @@ export default function AdminPanel({
               </p>
             )}
           </form>
-          <div className="admin-card mt-6">
-            <h3 className="flex items-center gap-2 font-bold">
-              <Package size={18} /> Lưu ý xuất bản
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              Chỉ đăng phần mềm bạn sở hữu hoặc được phép phân phối. Kiểm tra
-              file sạch trước khi công khai.
-            </p>
-          </div>
         </aside>
       </div>
       <section className="mx-auto max-w-6xl px-5 pb-14">
@@ -472,12 +462,12 @@ export default function AdminPanel({
             </div>
             <div className="admin-card mt-6">
               <h3 className="font-bold">Lượt tải gần nhất</h3>
-              <ul className="mt-3 space-y-2 text-sm">
+              <ul className="mt-3 max-h-[40rem] space-y-2 overflow-y-auto pr-2 text-sm">
                 {stats.recent.map((item, index) => (
-                  <li key={`${item.downloadedAt}-${index}`} className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-2">
-                    <span className="font-bold">{item.name} <span className="font-normal text-slate-400">v{item.version}</span></span>
-                    <span className="text-slate-400">{formatDateTime(item.downloadedAt)}</span>
-                    <span className="text-slate-500">{detectBrowser(item.userAgent)} · {detectPlatform(item.userAgent)}</span>
+                  <li key={`${item.downloadedAt}-${index}`} className="grid gap-1 border-b border-white/5 pb-2 sm:grid-cols-[minmax(0,1fr)_11rem_12rem] sm:items-center sm:gap-4">
+                    <span className="min-w-0 truncate font-bold">{item.name} <span className="font-normal text-slate-400">v{item.version}</span></span>
+                    <time className="whitespace-nowrap tabular-nums text-slate-400 sm:text-right" dateTime={new Date(item.downloadedAt).toISOString()}>{formatDateTime(item.downloadedAt)}</time>
+                    <span className="truncate text-slate-500 sm:text-right">{detectBrowser(item.userAgent)} · {detectPlatform(item.userAgent)}</span>
                   </li>
                 ))}
                 {stats.recent.length === 0 && <li className="text-slate-500">Chưa có dữ liệu.</li>}
