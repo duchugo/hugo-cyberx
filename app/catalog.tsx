@@ -404,7 +404,85 @@ function AppLogo({ app }: { app: App }) {
   }
   return <span className="h-16 w-16 shrink-0 overflow-hidden rounded-[19px] bg-white/5 shadow-lg"><img src={app.logoUrl} alt={`Logo ${app.name}`} className="h-full w-full object-contain p-1" onError={() => setFailedUrl(app.logoUrl || "")} /></span>;
 }
-function Services(){return <section id="dich-vu" className="border-y border-cyan-300/10 bg-gradient-to-b from-cyan-300/[.04] to-fuchsia-500/[.04]"><div className="mx-auto max-w-[1240px] px-5 py-16 lg:px-8"><div className="max-w-2xl"><p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Dịch vụ Hugo Cyberx</p><h2 className="mt-2 text-3xl font-black sm:text-4xl">Biến ý tưởng thành sản phẩm</h2><p className="mt-4 leading-7 text-slate-400">Nhận tư vấn và thực hiện giải pháp công nghệ theo nhu cầu cá nhân, cửa hàng và doanh nghiệp.</p></div><div className="mt-8 grid gap-5 md:grid-cols-2"><article className="rounded-3xl border border-white/10 bg-white/[.055] p-6"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span><h3 className="mt-5 text-xl font-black">Lập trình theo yêu cầu</h3><p className="mt-3 leading-7 text-slate-400">Website, công cụ nội bộ, tự động hóa quy trình và phần mềm phù hợp với nhu cầu thực tế.</p></article><article className="rounded-3xl border border-white/10 bg-white/[.055] p-6"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span><h3 className="mt-5 text-xl font-black">Sản xuất video AI</h3><p className="mt-3 leading-7 text-slate-400">Video quảng cáo, giới thiệu sản phẩm và nội dung truyền thông được thiết kế theo yêu cầu.</p></article></div><div id="lien-he" className="mt-6 flex flex-col gap-5 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-sm text-slate-400">Trao đổi trực tiếp với</p><h3 className="mt-1 text-xl font-black">Nguyễn Văn Đức</h3><p className="mt-1 font-bold text-cyan-300">0978.39.55.39</p></div><a href="tel:0978395539" className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-300 px-6 py-3 font-black text-[#071126]"><Phone size={18}/> Gọi tư vấn</a></div></div></section>}
+function Services() {
+  const programmingServices = [
+    "Thiết kế website giới thiệu, bán hàng, dịch vụ và hệ thống quản trị.",
+    "Xây dựng phần mềm quản lý nội bộ: khách hàng, nhân viên, sản phẩm, học viên, thu chi và báo cáo.",
+    "Xây dựng công cụ tự động hóa công việc.",
+    "Chuyển quy trình đang quản lý bằng Excel hoặc Google Sheets thành phần mềm chuyên nghiệp.",
+    "Tích hợp AI vào phần mềm hoặc quy trình làm việc.",
+    "Xây dựng API, hệ thống xử lý dữ liệu và công cụ hỗ trợ nghiệp vụ.",
+    "Nâng cấp, chỉnh sửa và bổ sung chức năng cho phần mềm hoặc website hiện có.",
+    "Phát triển công cụ theo yêu cầu đặc thù của từng ngành nghề.",
+  ];
+  const programmingAudience = [
+    "Cá nhân có ý tưởng về một công cụ hoặc phần mềm.",
+    "Cửa hàng muốn số hóa quy trình kinh doanh.",
+    "Doanh nghiệp cần phần mềm quản lý riêng.",
+    "Đơn vị muốn giảm thao tác thủ công và tự động hóa công việc.",
+    "Người đang quản lý dữ liệu bằng Excel nhưng hệ thống ngày càng phức tạp.",
+    "Người muốn ứng dụng AI vào công việc nhưng chưa biết bắt đầu từ đâu.",
+  ];
+  const programmingSteps = [
+    ["Tiếp nhận ý tưởng", "Khách hàng mô tả nhu cầu, vấn đề đang gặp phải hoặc chức năng mong muốn."],
+    ["Phân tích và tư vấn giải pháp", "Hugo Cyberx cùng khách hàng xác định chức năng, quy trình vận hành và phương án triển khai phù hợp."],
+    ["Xây dựng phiên bản thử nghiệm", "Thiết kế giao diện và các chức năng chính để khách hàng trải nghiệm."],
+    ["Hoàn thiện sản phẩm", "Điều chỉnh theo phản hồi, tối ưu giao diện, chức năng và hiệu suất."],
+    ["Bàn giao và hỗ trợ", "Hướng dẫn sử dụng, triển khai hệ thống và hỗ trợ trong quá trình vận hành."],
+  ];
+  const videoTypes = [
+    "Video quảng cáo sản phẩm.",
+    "Video bán hàng TikTok, Facebook Reels và YouTube Shorts.",
+    "Video giới thiệu thương hiệu, dịch vụ.",
+    "Video người mẫu AI, thời trang.",
+    "Video 3D, hoạt hình và mô phỏng ý tưởng.",
+    "Video theo phong cách riêng của khách hàng.",
+  ];
+  return (
+    <section id="dich-vu" className="border-y border-cyan-300/10 bg-gradient-to-b from-cyan-300/[.04] to-fuchsia-500/[.04]">
+      <div className="mx-auto max-w-[1240px] px-5 py-16 lg:px-8">
+        <div className="max-w-3xl">
+          <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Dịch vụ Hugo Cyberx</p>
+          <h2 className="mt-2 text-balance text-3xl font-black sm:text-4xl">Biến ý tưởng thành sản phẩm</h2>
+          <p className="mt-4 text-pretty leading-7 text-slate-400">Nhận tư vấn và thực hiện giải pháp công nghệ theo nhu cầu cá nhân, cửa hàng, doanh nghiệp và đơn vị.</p>
+        </div>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <article className="rounded-3xl border border-cyan-300/20 bg-white/[.055] p-6 sm:p-8">
+            <span className="grid size-12 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span>
+            <h3 className="mt-5 text-2xl font-black">1. Lập trình theo yêu cầu</h3>
+            <h4 className="mt-6 text-lg font-black text-cyan-200">Biến ý tưởng thành phần mềm thực tế</h4>
+            <p className="mt-3 text-pretty leading-7 text-slate-400">Bạn có một ý tưởng nhưng chưa biết bắt đầu từ đâu? Bạn đang dùng Excel, Google Sheets hoặc nhiều công cụ rời rạc và muốn xây dựng một hệ thống riêng?</p>
+            <p className="mt-3 text-pretty leading-7 text-slate-300">Hugo Cyberx tư vấn, thiết kế và lập trình phần mềm theo đúng quy trình công việc, nhu cầu sử dụng và ngân sách thực tế. Chúng tôi không ép khách hàng dùng một mẫu có sẵn.</p>
+            <h4 className="mt-7 text-lg font-black text-cyan-200">Các dịch vụ lập trình</h4>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-400">{programmingServices.map((item) => <li key={item} className="flex gap-2"><span className="text-cyan-300">•</span><span>{item}</span></li>)}</ul>
+            <h4 className="mt-7 text-lg font-black text-cyan-200">Quy trình thực hiện</h4>
+            <ol className="mt-4 space-y-4">{programmingSteps.map(([title, text], index) => <li key={title} className="flex gap-3"><span className="grid size-7 shrink-0 place-items-center rounded-full bg-cyan-300/15 text-sm font-black text-cyan-200">{index + 1}</span><div><strong className="text-white">{title}</strong><p className="mt-1 text-sm leading-6 text-slate-400">{text}</p></div></li>)}</ol>
+            <h4 className="mt-7 text-lg font-black text-cyan-200">Phù hợp với ai?</h4>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-400">{programmingAudience.map((item) => <li key={item} className="flex gap-2"><span className="text-cyan-300">•</span><span>{item}</span></li>)}</ul>
+            <div className="mt-7 rounded-2xl border border-cyan-300/15 bg-[#08142b] p-5"><h4 className="font-black text-white">Bạn chỉ cần có ý tưởng</h4><p className="mt-2 text-sm leading-6 text-slate-400">Không cần biết lập trình hay hiểu về công nghệ. Hãy mô tả vấn đề bạn muốn giải quyết, Hugo Cyberx sẽ cùng bạn tìm phương án để tạo ra sản phẩm có thể sử dụng thực tế.</p><p className="mt-3 font-black text-cyan-300">HUGO CYBERX – Technology Without Limits</p></div>
+          </article>
+
+          <article className="rounded-3xl border border-fuchsia-400/20 bg-white/[.055] p-6 sm:p-8">
+            <span className="grid size-12 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span>
+            <h3 className="mt-5 text-2xl font-black">2. Sản xuất video AI theo yêu cầu</h3>
+            <h4 className="mt-6 text-lg font-black text-fuchsia-200">Biến ý tưởng thành video bằng AI</h4>
+            <p className="mt-3 text-pretty leading-7 text-slate-400"><strong className="text-slate-200">Hugo Cyberx nhận sản xuất video bằng AI theo yêu cầu</strong> cho cá nhân, cửa hàng, doanh nghiệp và người sáng tạo nội dung.</p>
+            <p className="mt-3 text-pretty leading-7 text-slate-300">Chỉ cần cung cấp hình ảnh sản phẩm, nội dung hoặc ý tưởng, chúng tôi hỗ trợ xây dựng thành video hoàn chỉnh phù hợp với mục đích sử dụng.</p>
+            <h4 className="mt-7 text-lg font-black text-fuchsia-200">Các dạng video thực hiện</h4>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-400">{videoTypes.map((item) => <li key={item} className="flex gap-2"><span className="text-fuchsia-300">•</span><span>{item}</span></li>)}</ul>
+            <h4 className="mt-7 text-lg font-black text-fuchsia-200">Quy trình thực hiện</h4>
+            <p className="mt-3 rounded-2xl border border-fuchsia-300/15 bg-fuchsia-400/5 p-4 text-center text-sm font-black leading-7 text-fuchsia-100">Ý tưởng → Kịch bản → Hình ảnh AI → Chuyển động → Giọng đọc → Âm thanh → Video hoàn chỉnh</p>
+            <p className="mt-4 text-pretty leading-7 text-slate-400">Nội dung được thiết kế theo sản phẩm, đối tượng khách hàng và nền tảng đăng tải, ưu tiên video ngắn, dễ xem và tạo ấn tượng nhanh.</p>
+            <div className="mt-7 rounded-2xl border border-fuchsia-300/15 bg-[#08142b] p-5"><p className="text-pretty leading-7 text-slate-300">Bạn có thể chỉ có vài hình ảnh sản phẩm hoặc một ý tưởng ban đầu. Hugo Cyberx sẽ cùng bạn phát triển thành video bằng AI phù hợp với nhu cầu thực tế.</p><p className="mt-4 font-black text-fuchsia-300">HUGO CYBERX – Biến ý tưởng thành sản phẩm</p></div>
+          </article>
+        </div>
+
+        <div id="lien-he" className="mt-6 flex flex-col gap-5 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-sm text-slate-400">Trao đổi trực tiếp với</p><h3 className="mt-1 text-xl font-black">Nguyễn Văn Đức</h3><p className="mt-1 font-bold text-cyan-300">0978.39.55.39</p></div><a href="tel:0978395539" className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-300 px-6 py-3 font-black text-[#071126]"><Phone size={18}/> Gọi tư vấn</a></div>
+      </div>
+    </section>
+  );
+}
 function Modal({
   children,
   close,
