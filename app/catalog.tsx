@@ -478,7 +478,7 @@ function Services() {
           </article>
         </div>
 
-        <div id="lien-he" className="mt-6 flex flex-col gap-5 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-sm text-slate-400">Trao đổi trực tiếp với</p><h3 className="mt-1 text-xl font-black">Nguyễn Văn Đức</h3><p className="mt-1 font-bold text-cyan-300">0978.39.55.39</p></div><a href="tel:0978395539" className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-300 px-6 py-3 font-black text-[#071126]"><Phone size={18}/> Gọi tư vấn</a></div>
+        <div id="lien-he" className="mt-6 flex flex-col gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7"><div><p className="text-sm text-slate-400">Trao đổi trực tiếp với</p><h3 className="mt-1 text-xl font-black">Nguyễn Văn Đức</h3><p className="mt-1 font-bold text-cyan-300">0978.39.55.39</p><p className="mt-3 text-sm leading-6 text-slate-400">Mở Zalo và quét mã QR để kết bạn, trao đổi về nhu cầu của bạn.</p></div><div className="flex shrink-0 items-center gap-4 rounded-2xl border border-white/10 bg-white p-3"><img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-28 rounded-xl object-contain sm:size-32"/><span className="hidden max-w-28 text-sm font-bold leading-5 text-[#071126] sm:block">Quét mã để kết bạn Zalo</span></div></div>
       </div>
     </section>
   );
