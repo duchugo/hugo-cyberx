@@ -478,7 +478,7 @@ function Services() {
           </article>
         </div>
 
-        <div id="lien-he" className="mt-6 flex flex-col gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7"><div><p className="text-sm text-slate-400">Trao đổi trực tiếp với</p><h3 className="mt-1 text-xl font-black">Nguyễn Văn Đức</h3><p className="mt-1 font-bold text-cyan-300">0978.39.55.39</p><p className="mt-3 text-sm leading-6 text-slate-400">Mở Zalo và quét mã QR để kết bạn, trao đổi về nhu cầu của bạn.</p></div><div className="flex shrink-0 items-center gap-4 rounded-2xl border border-white/10 bg-white p-3"><img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-28 rounded-xl object-contain sm:size-32"/><span className="hidden max-w-28 text-sm font-bold leading-5 text-[#071126] sm:block">Quét mã để kết bạn Zalo</span></div></div>
+        <div id="lien-he" className="mt-6 flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:justify-center sm:p-8"><img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-44 rounded-2xl bg-white p-2"/><div className="max-w-xl text-center sm:text-left"><p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Liên hệ Hugo Cyberx</p><h3 className="mt-2 text-2xl font-black">Kết bạn Zalo để được tư vấn</h3><p className="mt-2 leading-7 text-slate-400">Quét mã QR để kết bạn với Nguyễn Văn Đức và trao đổi trực tiếp về nhu cầu lập trình hoặc sản xuất video AI.</p><p className="mt-2 font-bold text-cyan-300">0978.39.55.39</p></div></div>
       </div>
     </section>
   );
