@@ -270,18 +270,29 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
         </div>
       </section>}
       {mode === "services" && <Services />}
-      {mode !== "free" && <section className="border-y border-cyan-300/10 bg-white/[.025]">
-        <div className="mx-auto flex max-w-[1240px] flex-col items-center gap-6 px-5 py-12 text-center sm:flex-row sm:justify-center sm:text-left lg:px-8">
-          <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fzalo.me%2Fg%2F9uhvognikj5se34j0v8v"
-            alt="Mã QR tham gia nhóm Zalo Hugo Cyberx"
-            className="h-44 w-44 rounded-2xl bg-white p-2"
-          />
-          <div>
-            <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Cộng đồng Hugo Cyberx</p>
-            <h2 className="mt-2 text-2xl font-black">Tham gia nhóm Zalo để giao lưu và được hướng dẫn</h2>
-            <p className="mt-2 max-w-xl leading-7 text-slate-400">Quét mã QR hoặc mở liên kết để trao đổi, nhận hỗ trợ sử dụng phần mềm và chia sẻ kinh nghiệm cùng mọi người.</p>
-            <a href="https://zalo.me/g/9uhvognikj5se34j0v8v" target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-5 py-3 font-black text-[#071126]">Mở nhóm Zalo</a>
+      {mode !== "free" && <section className="border-t border-white/10">
+        <div className="mx-auto grid max-w-[1240px] items-stretch gap-6 px-5 py-12 md:grid-cols-2 lg:px-8">
+          <div id="lien-he" className="flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 text-center sm:flex-row sm:p-8 sm:text-left">
+            <img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-44 shrink-0 rounded-2xl bg-white p-2"/>
+            <div>
+              <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Liên hệ Hugo Cyberx</p>
+              <h3 className="mt-2 text-2xl font-black">Kết bạn Zalo để được tư vấn</h3>
+              <p className="mt-2 leading-7 text-slate-400">Quét mã QR để kết bạn với Nguyễn Văn Đức và trao đổi trực tiếp về nhu cầu lập trình hoặc sản xuất video AI.</p>
+              <p className="mt-2 font-bold text-cyan-300">0978.39.55.39</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 text-center sm:flex-row sm:p-8 sm:text-left">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fzalo.me%2Fg%2F9uhvognikj5se34j0v8v"
+              alt="Mã QR tham gia nhóm Zalo Hugo Cyberx"
+              className="size-44 shrink-0 rounded-2xl bg-white p-2"
+            />
+            <div>
+              <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Cộng đồng Hugo Cyberx</p>
+              <h3 className="mt-2 text-2xl font-black">Tham gia nhóm Zalo để giao lưu và được hướng dẫn</h3>
+              <p className="mt-2 leading-7 text-slate-400">Quét mã QR hoặc mở liên kết để trao đổi, nhận hỗ trợ sử dụng phần mềm và chia sẻ kinh nghiệm cùng mọi người.</p>
+              <a href="https://zalo.me/g/9uhvognikj5se34j0v8v" target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-5 py-3 font-black text-[#071126]">Mở nhóm Zalo</a>
+            </div>
           </div>
         </div>
       </section>}
@@ -477,8 +488,6 @@ function Services() {
             <div className="mt-7 rounded-2xl border border-fuchsia-300/15 bg-[#08142b] p-5"><p className="text-pretty leading-7 text-slate-300">Bạn có thể chỉ có vài hình ảnh sản phẩm hoặc một ý tưởng ban đầu. Hugo Cyberx sẽ cùng bạn phát triển thành video bằng AI phù hợp với nhu cầu thực tế.</p><p className="mt-4 font-black text-fuchsia-300">HUGO CYBERX – Biến ý tưởng thành sản phẩm</p></div>
           </article>
         </div>
-
-        <div id="lien-he" className="mt-6 flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 sm:flex-row sm:justify-center sm:p-8"><img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-44 rounded-2xl bg-white p-2"/><div className="max-w-xl text-center sm:text-left"><p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Liên hệ Hugo Cyberx</p><h3 className="mt-2 text-2xl font-black">Kết bạn Zalo để được tư vấn</h3><p className="mt-2 leading-7 text-slate-400">Quét mã QR để kết bạn với Nguyễn Văn Đức và trao đổi trực tiếp về nhu cầu lập trình hoặc sản xuất video AI.</p><p className="mt-2 font-bold text-cyan-300">0978.39.55.39</p></div></div>
       </div>
     </section>
   );
