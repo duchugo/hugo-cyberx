@@ -25,6 +25,8 @@ type App = {
   saleType: "free" | "paid";
   price: string;
   purchaseNote: string;
+  hidden: boolean;
+  downloadUrl?: string;
   logoUrl?: string;
 };
 type BankSettings = {
@@ -75,8 +77,10 @@ export default function AdminPanel({
   });
   const [stats, setStats] = useState<DownloadStats | null>(null);
   const authorization = { Authorization: `Bearer ${accessToken}` };
+  const absoluteDownloadUrl = (url: string) =>
+    typeof window === "undefined" ? url : new URL(url, window.location.origin).href;
   const load = () =>
-    fetch("/api/apps")
+    fetch("/api/apps?includeHidden=1", { headers: authorization })
       .then((r) => r.json())
       .then(setApps);
   useEffect(load, []);
@@ -163,6 +167,20 @@ export default function AdminPanel({
     });
     setNote(r.ok ? "Đã cập nhật phần mềm." : "Không thể cập nhật.");
     if (r.ok) load();
+  }
+  async function toggleHidden(a: App) {
+    const r = await fetch("/api/apps", {
+      method: "PATCH",
+      headers: { ...authorization, "content-type": "application/json" },
+      body: JSON.stringify({ ...a, hidden: !a.hidden }),
+    });
+    setNote(r.ok ? (a.hidden ? `Đã hiện ${a.name} trên trang chủ.` : `Đã ẩn ${a.name} khỏi trang chủ.`) : "Không thể cập nhật trạng thái hiển thị.");
+    if (r.ok) load();
+  }
+  async function copyDownloadLink(a: App) {
+    if (!a.downloadUrl) return;
+    await navigator.clipboard.writeText(new URL(a.downloadUrl, window.location.origin).href);
+    setNote(`Đã sao chép link tải của ${a.name}.`);
   }
   async function replaceVersion(a: App, file: File) {
     const version = prompt("Nhập số phiên bản mới", a.version);
@@ -295,6 +313,10 @@ export default function AdminPanel({
             <Field label="Logo ứng dụng (PNG, JPG hoặc WEBP; tối đa 2 MB)">
               <input name="logo" type="file" accept="image/png,image/jpeg,image/webp" />
             </Field>
+              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[.03] p-3 text-sm font-bold text-slate-300">
+                <input name="hidden" type="checkbox" className="size-4 accent-cyan-300" />
+                Ẩn khỏi trang chủ, chỉ chia sẻ bằng link tải
+              </label>
             <button className="admin-button">
               <Upload size={17} /> Tải lên và đăng
             </button>
@@ -308,7 +330,15 @@ export default function AdminPanel({
                   <span className="text-sm text-slate-400">
                     {a.platform} · v{a.version} · {a.size} · {a.saleType === "paid" ? `Trả phí ${a.price}` : "Miễn phí"}
                   </span>
+                  <span className={`mt-1 block text-xs font-bold ${a.hidden ? "text-amber-300" : "text-emerald-300"}`}>
+                    {a.hidden ? "Đang ẩn khỏi trang chủ" : "Đang hiển thị công khai"}
+                  </span>
+                  {a.downloadUrl && <div className="mt-2 flex max-w-full items-center gap-2">
+                    <a href={a.downloadUrl} target="_blank" rel="noreferrer" className="min-w-0 truncate text-xs text-cyan-300 hover:underline">{absoluteDownloadUrl(a.downloadUrl)}</a>
+                    <button type="button" onClick={() => void copyDownloadLink(a)} className="shrink-0 rounded-lg border border-cyan-300/20 px-2 py-1 text-xs font-bold text-cyan-200 hover:bg-cyan-300/10">Sao chép</button>
+                  </div>}
                 </div>
+                <button onClick={() => void toggleHidden(a)} className="rounded-lg border border-amber-300/20 px-2 py-1 text-xs font-bold text-amber-200 hover:bg-amber-300/10">{a.hidden ? "Hiện" : "Ẩn"}</button>
                 <button
                   onClick={() => edit(a)}
                   className="rounded-lg p-2 text-cyan-300 hover:bg-cyan-300/10"

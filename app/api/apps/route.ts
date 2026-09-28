@@ -15,13 +15,16 @@ const shape = (r: Record<string, unknown>) => ({
     .join("")
     .slice(0, 2)
     .toUpperCase(),
-  downloadUrl: r.saleType === "paid" ? undefined : `/api/download/${r.id}`,
+  downloadUrl: `/api/download/${r.id}`,
+  hidden: Boolean(Number(r.hidden)),
 });
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const includeHidden = new URL(req.url).searchParams.get("includeHidden") === "1" && Boolean(await getAdminIdentity(req));
     const rows = await getRawDb()
       .prepare(
-        "SELECT id,name,description,platform,version,size_bytes AS sizeBytes,category,color,downloads,sale_type AS saleType,price,purchase_note AS purchaseNote FROM applications ORDER BY created_at DESC",
+        `SELECT id,name,description,platform,version,size_bytes AS sizeBytes,category,color,downloads,sale_type AS saleType,price,purchase_note AS purchaseNote,hidden
+         FROM applications ${includeHidden ? "" : "WHERE hidden=0"} ORDER BY created_at DESC`,
       )
       .all<Record<string, unknown>>();
     return NextResponse.json(rows.results.map(shape));
@@ -64,10 +67,11 @@ export async function POST(req: NextRequest) {
       color = String(form.get("color") || "#16D9E3"),
       saleType = form.get("saleType") === "paid" ? "paid" : "free",
       price = String(form.get("price") || "").trim(),
-      purchaseNote = String(form.get("purchaseNote") || "").trim();
+      purchaseNote = String(form.get("purchaseNote") || "").trim(),
+      hidden = form.get("hidden") === "on" ? 1 : 0;
     await getRawDb()
       .prepare(
-        "INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,hidden,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
       )
       .bind(
         id,
@@ -83,6 +87,7 @@ export async function POST(req: NextRequest) {
         saleType,
         price,
         purchaseNote,
+        hidden,
         Date.now(),
         identity.id,
       )
@@ -101,6 +106,7 @@ export async function POST(req: NextRequest) {
         saleType,
         price,
         purchaseNote,
+        hidden: Boolean(hidden),
       }),
     );
   } catch (e) {
@@ -117,7 +123,7 @@ export async function PATCH(req: NextRequest) {
   const b = await req.json();
   await getRawDb()
     .prepare(
-      "UPDATE applications SET name=?,description=?,platform=?,version=?,category=?,color=?,sale_type=?,price=?,purchase_note=? WHERE id=?",
+      "UPDATE applications SET name=?,description=?,platform=?,version=?,category=?,color=?,sale_type=?,price=?,purchase_note=?,hidden=? WHERE id=?",
     )
     .bind(
       b.name,
@@ -129,6 +135,7 @@ export async function PATCH(req: NextRequest) {
       b.saleType === "paid" ? "paid" : "free",
       b.price || "",
       b.purchaseNote || "",
+      b.hidden ? 1 : 0,
       b.id,
     )
     .run();

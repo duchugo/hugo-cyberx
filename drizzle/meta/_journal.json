@@ -29,6 +29,13 @@
       "when": 1789381712287,
       "tag": "0003_fancy_mole_man",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1790634789860,
+      "tag": "0004_peaceful_thor",
+      "breakpoints": true
     }
   ]
 }
