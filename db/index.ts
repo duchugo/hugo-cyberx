@@ -13,4 +13,8 @@ export function getDb() {
   return drizzle(env.DB, { schema });
 }
 export function getRawDb():D1Database{if(!env.DB)throw new Error("D1 unavailable");return env.DB as D1Database}
+export async function ensureApplicationsHiddenColumn(){
+  const db=getRawDb();
+  try{await db.prepare("ALTER TABLE applications ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0").run();}catch{}
+}
 export function getBucket():R2Bucket{if(!env.BUCKET)throw new Error("R2 unavailable");return env.BUCKET as unknown as R2Bucket}

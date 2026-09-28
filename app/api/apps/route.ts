@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBucket, getRawDb } from "@/db";
+import { ensureApplicationsHiddenColumn, getBucket, getRawDb } from "@/db";
 import { getAdminIdentity } from "@/app/api/admin-auth";
 const bytes = (n: number) =>
   n < 1048576
@@ -20,6 +20,7 @@ const shape = (r: Record<string, unknown>) => ({
 });
 export async function GET(req: NextRequest) {
   try {
+    await ensureApplicationsHiddenColumn();
     const includeHidden = new URL(req.url).searchParams.get("includeHidden") === "1" && Boolean(await getAdminIdentity(req));
     const rows = await getRawDb()
       .prepare(
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
       { status: 403 },
     );
   try {
+    await ensureApplicationsHiddenColumn();
     const form = await req.formData();
     const file = form.get("file");
     if (!(file instanceof File) || !file.size)
@@ -120,6 +122,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   if (!(await getAdminIdentity(req)))
     return NextResponse.json({ error: "Không có quyền." }, { status: 403 });
+  await ensureApplicationsHiddenColumn();
   const b = await req.json();
   await getRawDb()
     .prepare(

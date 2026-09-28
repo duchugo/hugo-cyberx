@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBucket, getRawDb } from "@/db";
+import { ensureApplicationsHiddenColumn, getBucket, getRawDb } from "@/db";
 import { authorized, denied } from "../shared";
 
 export async function POST(req: NextRequest) {
   const identity = await authorized(req);
   if (!identity) return denied();
+  await ensureApplicationsHiddenColumn();
   try {
     const b = await req.json();
     if (!String(b.key || "").startsWith("installers/") || !b.uploadId || !Array.isArray(b.parts)) {
