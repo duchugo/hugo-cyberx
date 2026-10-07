@@ -2,20 +2,33 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Apple,
+  BadgeCheck,
+  Bot,
+  Box,
+  BrainCircuit,
+  Briefcase,
   CheckCircle2,
   Clock,
   Code2,
+  Database,
   Download,
+  FileSpreadsheet,
   Gift,
+  Globe,
   Headset,
+  Megaphone,
   Menu,
   Monitor,
+  PersonStanding,
   Phone,
   Search,
   ShieldCheck,
   Smartphone,
   Sparkles,
+  Users,
   Video,
+  Wand2,
+  Wrench,
   X,
 } from "lucide-react";
 type Platform = "Windows" | "Android" | "iOS";
@@ -523,15 +536,15 @@ function AppLogo({ app }: { app: App }) {
   return <span className="h-16 w-16 shrink-0 overflow-hidden rounded-[19px] bg-white/5 shadow-lg"><img src={app.logoUrl} alt={`Logo ${app.name}`} className="h-full w-full object-contain p-1" onError={() => setFailedUrl(app.logoUrl || "")} /></span>;
 }
 function Services() {
-  const programmingServices = [
-    "Thiết kế website giới thiệu, bán hàng, dịch vụ và hệ thống quản trị.",
-    "Xây dựng phần mềm quản lý nội bộ: khách hàng, nhân viên, sản phẩm, học viên, thu chi và báo cáo.",
-    "Xây dựng công cụ tự động hóa công việc.",
-    "Chuyển quy trình đang quản lý bằng Excel hoặc Google Sheets thành phần mềm chuyên nghiệp.",
-    "Tích hợp AI vào phần mềm hoặc quy trình làm việc.",
-    "Xây dựng API, hệ thống xử lý dữ liệu và công cụ hỗ trợ nghiệp vụ.",
-    "Nâng cấp, chỉnh sửa và bổ sung chức năng cho phần mềm hoặc website hiện có.",
-    "Phát triển công cụ theo yêu cầu đặc thù của từng ngành nghề.",
+  const programmingCards = [
+    { icon: Globe, title: "Thiết kế website", desc: "Website giới thiệu, bán hàng, dịch vụ và hệ thống quản trị." },
+    { icon: Users, title: "Phần mềm quản lý nội bộ", desc: "Khách hàng, nhân viên, sản phẩm, học viên, thu chi và báo cáo." },
+    { icon: Bot, title: "Công cụ tự động hóa", desc: "Xây dựng công cụ tự động hóa các công việc lặp lại hằng ngày." },
+    { icon: FileSpreadsheet, title: "Excel / Sheets → phần mềm", desc: "Chuyển quy trình đang quản lý bằng Excel hoặc Google Sheets thành phần mềm chuyên nghiệp." },
+    { icon: BrainCircuit, title: "Tích hợp AI", desc: "Đưa AI vào phần mềm hoặc quy trình làm việc của bạn." },
+    { icon: Database, title: "API & xử lý dữ liệu", desc: "Xây dựng API, hệ thống xử lý dữ liệu và công cụ hỗ trợ nghiệp vụ." },
+    { icon: Wrench, title: "Nâng cấp & bổ sung", desc: "Chỉnh sửa, bổ sung chức năng cho phần mềm hoặc website hiện có." },
+    { icon: Briefcase, title: "Công cụ theo ngành nghề", desc: "Phát triển công cụ theo yêu cầu đặc thù của từng ngành nghề." },
   ];
   const programmingAudience = [
     "Cá nhân có ý tưởng về một công cụ hoặc phần mềm.",
@@ -542,19 +555,19 @@ function Services() {
     "Người muốn ứng dụng AI vào công việc nhưng chưa biết bắt đầu từ đâu.",
   ];
   const programmingSteps = [
-    ["Tiếp nhận ý tưởng", "Khách hàng mô tả nhu cầu, vấn đề đang gặp phải hoặc chức năng mong muốn."],
-    ["Phân tích và tư vấn giải pháp", "Hugo Cyberx cùng khách hàng xác định chức năng, quy trình vận hành và phương án triển khai phù hợp."],
-    ["Xây dựng phiên bản thử nghiệm", "Thiết kế giao diện và các chức năng chính để khách hàng trải nghiệm."],
-    ["Hoàn thiện sản phẩm", "Điều chỉnh theo phản hồi, tối ưu giao diện, chức năng và hiệu suất."],
-    ["Bàn giao và hỗ trợ", "Hướng dẫn sử dụng, triển khai hệ thống và hỗ trợ trong quá trình vận hành."],
+    ["Tiếp nhận ý tưởng", "mô tả nhu cầu, vấn đề đang gặp phải hoặc chức năng mong muốn."],
+    ["Phân tích và tư vấn giải pháp", "xác định chức năng, quy trình vận hành và phương án triển khai phù hợp."],
+    ["Xây dựng phiên bản thử nghiệm", "thiết kế giao diện và các chức năng chính để trải nghiệm."],
+    ["Hoàn thiện sản phẩm", "điều chỉnh theo phản hồi, tối ưu giao diện, chức năng và hiệu suất."],
+    ["Bàn giao và hỗ trợ", "hướng dẫn sử dụng, triển khai hệ thống và hỗ trợ vận hành."],
   ];
-  const videoTypes = [
-    "Video quảng cáo sản phẩm.",
-    "Video bán hàng TikTok, Facebook Reels và YouTube Shorts.",
-    "Video giới thiệu thương hiệu, dịch vụ.",
-    "Video người mẫu AI, thời trang.",
-    "Video 3D, hoạt hình và mô phỏng ý tưởng.",
-    "Video theo phong cách riêng của khách hàng.",
+  const videoCards = [
+    { icon: Megaphone, title: "Video quảng cáo", desc: "Quảng cáo sản phẩm, dịch vụ." },
+    { icon: Smartphone, title: "Video bán hàng", desc: "TikTok, Facebook Reels và YouTube Shorts." },
+    { icon: BadgeCheck, title: "Video thương hiệu", desc: "Giới thiệu thương hiệu, dịch vụ." },
+    { icon: PersonStanding, title: "Người mẫu AI", desc: "Video người mẫu AI, thời trang." },
+    { icon: Box, title: "3D & hoạt hình", desc: "Video 3D, hoạt hình và mô phỏng ý tưởng." },
+    { icon: Wand2, title: "Phong cách riêng", desc: "Video theo phong cách riêng của khách hàng." },
   ];
   return (
     <section id="dich-vu" className="border-y border-cyan-300/10 bg-gradient-to-b from-cyan-300/[.04] to-fuchsia-500/[.04]">
@@ -565,35 +578,45 @@ function Services() {
           <p className="mt-4 text-pretty leading-7 text-slate-400">Nhận tư vấn và thực hiện giải pháp công nghệ theo nhu cầu cá nhân, cửa hàng, doanh nghiệp và đơn vị.</p>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <article className="cyber-shine-soft glass-sheen rounded-3xl border border-cyan-300/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
-            <span className="grid size-12 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span>
-            <h3 className="mt-5 text-2xl font-black">1. Lập trình theo yêu cầu</h3>
-            <h4 className="mt-6 text-lg font-black text-cyan-200">Biến ý tưởng thành phần mềm thực tế</h4>
-            <p className="mt-3 text-pretty leading-7 text-slate-400">Bạn có một ý tưởng nhưng chưa biết bắt đầu từ đâu? Bạn đang dùng Excel, Google Sheets hoặc nhiều công cụ rời rạc và muốn xây dựng một hệ thống riêng?</p>
-            <p className="mt-3 text-pretty leading-7 text-slate-300">Hugo Cyberx tư vấn, thiết kế và lập trình phần mềm theo đúng quy trình công việc, nhu cầu sử dụng và ngân sách thực tế. Chúng tôi không ép khách hàng dùng một mẫu có sẵn.</p>
-            <h4 className="mt-7 text-lg font-black text-cyan-200">Các dịch vụ lập trình</h4>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-400">{programmingServices.map((item) => <li key={item} className="flex gap-2"><span className="text-cyan-300">•</span><span>{item}</span></li>)}</ul>
-            <h4 className="mt-7 text-lg font-black text-cyan-200">Quy trình thực hiện</h4>
-            <ol className="mt-4 space-y-4">{programmingSteps.map(([title, text], index) => <li key={title} className="flex gap-3"><span className="grid size-7 shrink-0 place-items-center rounded-full bg-cyan-300/15 text-sm font-black text-cyan-200">{index + 1}</span><div><strong className="text-white">{title}</strong><p className="mt-1 text-sm leading-6 text-slate-400">{text}</p></div></li>)}</ol>
-            <h4 className="mt-7 text-lg font-black text-cyan-200">Phù hợp với ai?</h4>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-400">{programmingAudience.map((item) => <li key={item} className="flex gap-2"><span className="text-cyan-300">•</span><span>{item}</span></li>)}</ul>
-            <div className="mt-7 rounded-2xl border border-cyan-300/15 bg-[#08142b] p-5"><h4 className="font-black text-white">Bạn chỉ cần có ý tưởng</h4><p className="mt-2 text-sm leading-6 text-slate-400">Không cần biết lập trình hay hiểu về công nghệ. Hãy mô tả vấn đề bạn muốn giải quyết, Hugo Cyberx sẽ cùng bạn tìm phương án để tạo ra sản phẩm có thể sử dụng thực tế.</p><p className="mt-3 font-black text-cyan-300">HUGO CYBERX – Technology Without Limits</p></div>
-          </article>
+        <div className="mt-10" data-reveal>
+          <h3 className="flex items-center gap-3 text-xl font-black"><span className="grid size-11 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span>1. Lập trình theo yêu cầu</h3>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Bạn có ý tưởng nhưng chưa biết bắt đầu, đang dùng Excel hoặc nhiều công cụ rời rạc? Hugo Cyberx tư vấn, thiết kế và lập trình theo đúng quy trình công việc, nhu cầu sử dụng và ngân sách thực tế — không ép dùng mẫu có sẵn.</p>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {programmingCards.map(({ icon: Icon, title, desc }) => (
+              <article key={title} className="cyber-shine-soft glass-sheen flex flex-col rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]">
+                <span className="grid size-11 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Icon size={20} /></span>
+                <h4 className="mt-4 font-black">{title}</h4>
+                <p className="mt-2 text-[13px] leading-5 text-slate-400">{desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
 
-          <article className="cyber-shine-soft glass-sheen rounded-3xl border border-fuchsia-400/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
-            <span className="grid size-12 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span>
-            <h3 className="mt-5 text-2xl font-black">2. Sản xuất video AI theo yêu cầu</h3>
-            <h4 className="mt-6 text-lg font-black text-fuchsia-200">Biến ý tưởng thành video bằng AI</h4>
-            <p className="mt-3 text-pretty leading-7 text-slate-400"><strong className="text-slate-200">Hugo Cyberx nhận sản xuất video bằng AI theo yêu cầu</strong> cho cá nhân, cửa hàng, doanh nghiệp và người sáng tạo nội dung.</p>
-            <p className="mt-3 text-pretty leading-7 text-slate-300">Chỉ cần cung cấp hình ảnh sản phẩm, nội dung hoặc ý tưởng, chúng tôi hỗ trợ xây dựng thành video hoàn chỉnh phù hợp với mục đích sử dụng.</p>
-            <h4 className="mt-7 text-lg font-black text-fuchsia-200">Các dạng video thực hiện</h4>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-400">{videoTypes.map((item) => <li key={item} className="flex gap-2"><span className="text-fuchsia-300">•</span><span>{item}</span></li>)}</ul>
-            <h4 className="mt-7 text-lg font-black text-fuchsia-200">Quy trình thực hiện</h4>
-            <p className="mt-3 rounded-2xl border border-fuchsia-300/15 bg-fuchsia-400/5 p-4 text-center text-sm font-black leading-7 text-fuchsia-100">Ý tưởng → Kịch bản → Hình ảnh AI → Chuyển động → Giọng đọc → Âm thanh → Video hoàn chỉnh</p>
-            <p className="mt-4 text-pretty leading-7 text-slate-400">Nội dung được thiết kế theo sản phẩm, đối tượng khách hàng và nền tảng đăng tải, ưu tiên video ngắn, dễ xem và tạo ấn tượng nhanh.</p>
-            <div className="mt-7 rounded-2xl border border-fuchsia-300/15 bg-[#08142b] p-5"><p className="text-pretty leading-7 text-slate-300">Bạn có thể chỉ có vài hình ảnh sản phẩm hoặc một ý tưởng ban đầu. Hugo Cyberx sẽ cùng bạn phát triển thành video bằng AI phù hợp với nhu cầu thực tế.</p><p className="mt-4 font-black text-fuchsia-300">HUGO CYBERX – Biến ý tưởng thành sản phẩm</p></div>
-          </article>
+        <div className="mt-10" data-reveal>
+          <h3 className="flex items-center gap-3 text-xl font-black"><span className="grid size-11 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span>2. Sản xuất video AI theo yêu cầu</h3>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Chỉ cần hình ảnh sản phẩm, nội dung hoặc ý tưởng ban đầu, Hugo Cyberx xây dựng thành video hoàn chỉnh cho cá nhân, cửa hàng, doanh nghiệp và người sáng tạo nội dung — ưu tiên video ngắn, dễ xem, tạo ấn tượng nhanh.</p>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {videoCards.map(({ icon: Icon, title, desc }) => (
+              <article key={title} className="cyber-shine-soft glass-sheen flex flex-col rounded-3xl border border-fuchsia-400/20 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-fuchsia-400/50 hover:shadow-[0_24px_70px_-20px_rgba(236,85,242,.45)]">
+                <span className="grid size-11 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Icon size={20} /></span>
+                <h4 className="mt-4 font-black">{title}</h4>
+                <p className="mt-2 text-[13px] leading-5 text-slate-400">{desc}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-5 rounded-2xl border border-fuchsia-300/15 bg-fuchsia-400/5 p-4 text-center text-sm font-black leading-7 text-fuchsia-100">Ý tưởng → Kịch bản → Hình ảnh AI → Chuyển động → Giọng đọc → Âm thanh → Video hoàn chỉnh</p>
+        </div>
+
+        <div className="mt-10 grid gap-5 lg:grid-cols-2" data-reveal>
+          <div className="glass-sheen rounded-3xl border border-white/10 bg-white/[.045] p-6 backdrop-blur-md">
+            <h4 className="font-black text-cyan-200">Quy trình thực hiện</h4>
+            <ol className="mt-4 space-y-3">{programmingSteps.map(([title, text], index) => <li key={title} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-cyan-300/15 text-xs font-black text-cyan-200">{index + 1}</span><p className="text-sm leading-6 text-slate-400"><strong className="text-white">{title}</strong> — {text}</p></li>)}</ol>
+          </div>
+          <div className="glass-sheen rounded-3xl border border-white/10 bg-white/[.045] p-6 backdrop-blur-md">
+            <h4 className="font-black text-cyan-200">Phù hợp với ai?</h4>
+            <div className="mt-4 flex flex-wrap gap-2">{programmingAudience.map((item) => <span key={item} className="rounded-full border border-cyan-300/20 bg-cyan-300/[.06] px-3 py-1.5 text-xs font-bold text-slate-300">{item}</span>)}</div>
+            <div className="mt-5 rounded-2xl border border-cyan-300/15 bg-[#08142b] p-4"><p className="text-sm leading-6 text-slate-300">Không cần biết lập trình hay hiểu về công nghệ — chỉ cần mô tả vấn đề bạn muốn giải quyết, Hugo Cyberx cùng bạn tạo ra sản phẩm sử dụng được thực tế.</p><p className="mt-2 text-sm font-black text-cyan-300">HUGO CYBERX – Technology Without Limits</p></div>
+          </div>
         </div>
       </div>
     </section>
