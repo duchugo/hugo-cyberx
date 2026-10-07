@@ -25,10 +25,13 @@ button,a{cursor:pointer}
 @keyframes float-y{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes shine-sweep{from{transform:translateX(-140%) skewX(-18deg)}to{transform:translateX(240%) skewX(-18deg)}}
 
-.cyber-aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.cyber-aurora::before,.cyber-aurora::after{content:"";position:absolute;border-radius:9999px;filter:blur(90px);opacity:.55}
-.cyber-aurora::before{width:520px;height:520px;top:-160px;left:8%;background:radial-gradient(circle,rgba(22,217,227,.5),transparent 65%);animation:aurora-drift 14s ease-in-out infinite}
-.cyber-aurora::after{width:620px;height:620px;bottom:-220px;right:4%;background:radial-gradient(circle,rgba(226,49,255,.42),transparent 65%);animation:aurora-drift-alt 18s ease-in-out infinite}
+.cyber-aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.cyber-aurora::before,.cyber-aurora::after{content:"";position:absolute;border-radius:9999px;filter:blur(90px);opacity:.6}
+.cyber-aurora::before{width:560px;height:560px;top:-140px;left:6%;background:radial-gradient(circle,rgba(22,217,227,.5),transparent 65%);animation:aurora-drift 14s ease-in-out infinite}
+.cyber-aurora::after{width:680px;height:680px;bottom:-200px;right:2%;background:radial-gradient(circle,rgba(226,49,255,.42),transparent 65%);animation:aurora-drift-alt 18s ease-in-out infinite}
+
+.glass-sheen{position:relative}
+.glass-sheen::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(165deg,rgba(255,255,255,.11),rgba(255,255,255,.03) 34%,transparent 58%);pointer-events:none}
 
 .cyber-text{background-size:260% 100%;animation:gradient-pan 7s ease-in-out infinite}
 .cyber-glow-badge{animation:glow-pulse 3.2s ease-in-out infinite}

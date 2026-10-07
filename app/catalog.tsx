@@ -120,7 +120,8 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
     [apps],
   );
   return (
-    <main className="min-h-screen bg-[#050A18] text-white">
+    <main className="min-h-screen text-white">
+      <div className="cyber-aurora" aria-hidden />
       <header className="sticky top-0 z-40 border-b border-cyan-300/10 bg-[#050A18]/90 backdrop-blur-xl">
         <div className="mx-auto flex h-[76px] max-w-[1240px] items-center justify-between px-5 lg:px-8">
           <a href="/" className="flex items-center gap-3">
@@ -176,7 +177,6 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
         id="thuong-hieu"
         className="cyber-grid relative overflow-hidden border-b border-cyan-300/10"
       >
-        <div className="cyber-aurora" aria-hidden />
         <div className="mx-auto grid max-w-[1240px] items-center gap-9 px-5 py-14 lg:grid-cols-[1fr_500px] lg:px-8 lg:py-20">
           <div data-reveal>
             <span className="cyber-glow-badge inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1.5 text-sm font-bold text-cyan-200">
@@ -244,7 +244,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           {filtered.map((a) => (
             <article
               key={a.id}
-                  className="group rounded-3xl border border-white/10 bg-white/[.055] p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]"
+                  className="glass-sheen group rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]"
             >
               <div className="flex items-start justify-between">
                 <AppLogo app={a} />
@@ -306,7 +306,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       {mode === "services" && <Services />}
       {mode !== "free" && <section className="border-t border-white/10">
         <div className="mx-auto grid max-w-[1240px] items-stretch gap-6 px-5 py-12 md:grid-cols-2 lg:px-8" data-reveal>
-          <div id="lien-he" className="flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 text-center sm:flex-row sm:p-8 sm:text-left">
+          <div id="lien-he" className="glass-sheen flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b]/70 p-6 text-center backdrop-blur-md sm:flex-row sm:p-8 sm:text-left">
             <img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-44 shrink-0 rounded-2xl bg-white p-2"/>
             <div>
               <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Liên hệ Hugo Cyberx</p>
@@ -315,7 +315,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               <p className="mt-2 font-bold text-cyan-300">0978.39.55.39</p>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 text-center sm:flex-row sm:p-8 sm:text-left">
+          <div className="glass-sheen flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b]/70 p-6 text-center backdrop-blur-md sm:flex-row sm:p-8 sm:text-left">
             <img
               src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fzalo.me%2Fg%2F9uhvognikj5se34j0v8v"
               alt="Mã QR tham gia nhóm Zalo Hugo Cyberx"
@@ -441,7 +441,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
         </Modal>
       )}
       {!noticeClosed && (
-        <div className="fixed bottom-20 left-1/2 z-40 w-[min(94vw,680px)] -translate-x-1/2 rounded-2xl border border-cyan-300/25 bg-[#0B1730]/95 p-3 shadow-[0_18px_60px_rgba(3,10,30,.7)] backdrop-blur-xl sm:bottom-4 sm:p-4">
+        <div className="fixed bottom-20 left-1/2 z-40 w-[min(94vw,680px)] -translate-x-1/2 rounded-2xl border border-cyan-300/25 bg-[#0B1730]/85 p-3 shadow-[0_18px_60px_rgba(3,10,30,.7)] backdrop-blur-xl sm:bottom-4 sm:p-4">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-cyan-300 to-fuchsia-500 text-[#071126]">
               <Sparkles size={19} />
@@ -545,7 +545,7 @@ function Services() {
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <article className="rounded-3xl border border-cyan-300/20 bg-white/[.055] p-6 sm:p-8">
+          <article className="glass-sheen rounded-3xl border border-cyan-300/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
             <span className="grid size-12 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span>
             <h3 className="mt-5 text-2xl font-black">1. Lập trình theo yêu cầu</h3>
             <h4 className="mt-6 text-lg font-black text-cyan-200">Biến ý tưởng thành phần mềm thực tế</h4>
@@ -560,7 +560,7 @@ function Services() {
             <div className="mt-7 rounded-2xl border border-cyan-300/15 bg-[#08142b] p-5"><h4 className="font-black text-white">Bạn chỉ cần có ý tưởng</h4><p className="mt-2 text-sm leading-6 text-slate-400">Không cần biết lập trình hay hiểu về công nghệ. Hãy mô tả vấn đề bạn muốn giải quyết, Hugo Cyberx sẽ cùng bạn tìm phương án để tạo ra sản phẩm có thể sử dụng thực tế.</p><p className="mt-3 font-black text-cyan-300">HUGO CYBERX – Technology Without Limits</p></div>
           </article>
 
-          <article className="rounded-3xl border border-fuchsia-400/20 bg-white/[.055] p-6 sm:p-8">
+          <article className="glass-sheen rounded-3xl border border-fuchsia-400/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
             <span className="grid size-12 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span>
             <h3 className="mt-5 text-2xl font-black">2. Sản xuất video AI theo yêu cầu</h3>
             <h4 className="mt-6 text-lg font-black text-fuchsia-200">Biến ý tưởng thành video bằng AI</h4>
