@@ -81,6 +81,25 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       )
       .catch(() => {});
   }, []);
+  useEffect(() => {
+    const targets = Array.from(document.querySelectorAll("[data-reveal]"));
+    if (!("IntersectionObserver" in window)) {
+      targets.forEach((el) => el.classList.add("revealed"));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+      },
+      { threshold: 0.12 },
+    );
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
   const filtered = useMemo(
     () =>
       apps.filter(
@@ -150,9 +169,10 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
         id="thuong-hieu"
         className="cyber-grid relative overflow-hidden border-b border-cyan-300/10"
       >
+        <div className="cyber-aurora" aria-hidden />
         <div className="mx-auto grid max-w-[1240px] items-center gap-9 px-5 py-14 lg:grid-cols-[1fr_500px] lg:px-8 lg:py-20">
-          <div>
-            <span className="inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1.5 text-sm font-bold text-cyan-200">
+          <div data-reveal>
+            <span className="cyber-glow-badge inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1.5 text-sm font-bold text-cyan-200">
               {mode === "free" ? "Công cụ miễn phí từ Hugo Cyberx" : mode === "paid" ? "Phần mềm bản quyền & cao cấp" : "Dịch vụ công nghệ Hugo Cyberx"}
             </span>
             <h1 className="mt-5 text-4xl font-black leading-[1.06] tracking-[-.04em] sm:text-6xl">
@@ -169,7 +189,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <img
               src="/hugo-cyberx-main-logo.webp"
               alt="Logo chính Hugo Cyberx"
-              className="relative w-full max-w-[430px] rounded-[2rem] shadow-[0_25px_80px_rgba(22,217,227,.2)]"
+              className="cyber-float relative w-full max-w-[430px] rounded-[2rem] shadow-[0_25px_80px_rgba(22,217,227,.2)]"
             />
           </div>
         </div>
@@ -200,7 +220,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             ))}
           </div>
         </div>
-        <div className="mb-7 mt-12">
+        <div className="mb-7 mt-12" data-reveal>
           <p className="text-sm font-black uppercase tracking-[.2em] text-fuchsia-400">
             Hugo Software
           </p>
@@ -210,7 +230,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           {filtered.map((a) => (
             <article
               key={a.id}
-              className="group rounded-3xl border border-white/10 bg-white/[.055] p-5 transition hover:-translate-y-1 hover:border-cyan-300/35"
+                  className="group rounded-3xl border border-white/10 bg-white/[.055] p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]"
             >
               <div className="flex items-start justify-between">
                 <AppLogo app={a} />
@@ -251,7 +271,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
         </div>
       </section>}
       {mode === "free" && <section id="an-toan" className="border-y border-white/10 bg-white/[.03]">
-        <div className="mx-auto grid max-w-[1240px] gap-6 px-5 py-10 sm:grid-cols-3 lg:px-8">
+        <div className="mx-auto grid max-w-[1240px] gap-6 px-5 py-10 sm:grid-cols-3 lg:px-8" data-reveal>
           <Trust
             icon={<ShieldCheck />}
             title="Thông tin rõ ràng"
@@ -271,7 +291,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       </section>}
       {mode === "services" && <Services />}
       {mode !== "free" && <section className="border-t border-white/10">
-        <div className="mx-auto grid max-w-[1240px] items-stretch gap-6 px-5 py-12 md:grid-cols-2 lg:px-8">
+        <div className="mx-auto grid max-w-[1240px] items-stretch gap-6 px-5 py-12 md:grid-cols-2 lg:px-8" data-reveal>
           <div id="lien-he" className="flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b] p-6 text-center sm:flex-row sm:p-8 sm:text-left">
             <img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-44 shrink-0 rounded-2xl bg-white p-2"/>
             <div>
@@ -302,12 +322,13 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           Một lời chia sẻ hoặc khoản cảm ơn tùy tâm sẽ giúp Hugo Cyberx tiếp tục
           hoàn thiện các công cụ miễn phí.
         </p>
-        <button
-          onClick={() => setThanks(true)}
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-300 to-fuchsia-500 px-6 py-3 font-black text-[#071126]"
-        >
-          <Gift size={19} /> Gửi lời cảm ơn
-        </button>
+            <button
+              data-reveal
+              onClick={() => setThanks(true)}
+              className="cyber-shine mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-300 to-fuchsia-500 px-6 py-3 font-black text-[#071126]"
+            >
+              <Gift size={19} /> Gửi lời cảm ơn
+            </button>
       </section>}
       <footer className="border-t border-white/10 px-5 py-8 text-center text-sm text-slate-500">
         <p>© 2026 Hugo Cyberx · Technology Without Limits</p>
@@ -451,7 +472,7 @@ function Services() {
   ];
   return (
     <section id="dich-vu" className="border-y border-cyan-300/10 bg-gradient-to-b from-cyan-300/[.04] to-fuchsia-500/[.04]">
-      <div className="mx-auto max-w-[1240px] px-5 py-16 lg:px-8">
+      <div className="mx-auto max-w-[1240px] px-5 py-16 lg:px-8" data-reveal>
         <div className="max-w-3xl">
           <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Dịch vụ Hugo Cyberx</p>
           <h2 className="mt-2 text-balance text-3xl font-black sm:text-4xl">Biến ý tưởng thành sản phẩm</h2>

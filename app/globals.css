@@ -16,3 +16,28 @@ button,a{cursor:pointer}
 #san-pham .grid:empty::before{content:"Chưa có phần mềm nào được đăng";display:block;font-size:1.15rem;font-weight:800;color:#f8fafc}
 #san-pham .grid:empty::after{content:"Mở trang Quản trị để tải phần mềm thật đầu tiên lên Hugo Cyberx.";display:block;margin-top:.6rem;font-size:.9rem;color:#64748b}
 .cyber-grid{background-image:radial-gradient(circle at 77% 28%,rgba(226,49,255,.15),transparent 27%),radial-gradient(circle at 24% 18%,rgba(22,217,227,.12),transparent 32%),linear-gradient(rgba(22,217,227,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(22,217,227,.035) 1px,transparent 1px);background-size:auto,auto,38px 38px,38px 38px}.cyber-text{background:linear-gradient(90deg,#35f3ef,#ec55f2,#ff9654);-webkit-background-clip:text;background-clip:text;color:transparent}.admin-card{border:1px solid rgba(255,255,255,.1);border-radius:1rem;background:rgba(255,255,255,.055);padding:1.25rem}.admin-field{display:flex;flex-direction:column;gap:.45rem;font-size:.875rem;font-weight:700;color:#cbd5e1}.admin-field input,.admin-field select,.admin-field textarea{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:.75rem;background:#0b1730;padding:.75rem .85rem;color:#fff;outline:none}.admin-field input:focus,.admin-field select:focus,.admin-field textarea:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.1)}.admin-button{display:flex;width:100%;align-items:center;justify-content:center;gap:.5rem;border-radius:.75rem;background:#67e8f9;padding:.8rem;font-weight:900;color:#071126}
+
+/* ── Cyber glow & motion (Gói 1: lung linh nền tảng) ─────────────────── */
+@keyframes aurora-drift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(4%,-3%,0) scale(1.12)}}
+@keyframes aurora-drift-alt{0%,100%{transform:translate3d(0,0,0) scale(1.05)}50%{transform:translate3d(-4%,3%,0) scale(.95)}}
+@keyframes gradient-pan{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 16px rgba(34,211,238,.22)}50%{box-shadow:0 0 32px rgba(236,85,242,.38)}}
+@keyframes float-y{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes shine-sweep{from{transform:translateX(-140%) skewX(-18deg)}to{transform:translateX(240%) skewX(-18deg)}}
+
+.cyber-aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.cyber-aurora::before,.cyber-aurora::after{content:"";position:absolute;border-radius:9999px;filter:blur(90px);opacity:.55}
+.cyber-aurora::before{width:520px;height:520px;top:-160px;left:8%;background:radial-gradient(circle,rgba(22,217,227,.5),transparent 65%);animation:aurora-drift 14s ease-in-out infinite}
+.cyber-aurora::after{width:620px;height:620px;bottom:-220px;right:4%;background:radial-gradient(circle,rgba(226,49,255,.42),transparent 65%);animation:aurora-drift-alt 18s ease-in-out infinite}
+
+.cyber-text{background-size:260% 100%;animation:gradient-pan 7s ease-in-out infinite}
+.cyber-glow-badge{animation:glow-pulse 3.2s ease-in-out infinite}
+.cyber-float{animation:float-y 6s ease-in-out infinite}
+.cyber-shine{position:relative;overflow:hidden}
+.cyber-shine::after{content:"";position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);opacity:0;pointer-events:none}
+.cyber-shine:hover::after{opacity:1;animation:shine-sweep .9s ease}
+
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+[data-reveal].revealed{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){.cyber-aurora::before,.cyber-aurora::after,.cyber-text,.cyber-glow-badge,.cyber-float,.cyber-shine:hover::after{animation:none}[data-reveal]{opacity:1;transform:none;transition:none}}
