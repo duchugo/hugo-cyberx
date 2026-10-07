@@ -6,12 +6,14 @@ import {
   Code2,
   Download,
   Gift,
+  Headset,
   Menu,
   Monitor,
   Phone,
   Search,
   ShieldCheck,
   Smartphone,
+  Sparkles,
   Video,
   X,
 } from "lucide-react";
@@ -56,6 +58,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
     [thanks, setThanks] = useState(false),
     [detail, setDetail] = useState<App | null>(null),
     [menu, setMenu] = useState(false),
+    [noticeClosed, setNoticeClosed] = useState(false),
     [settings, setSettings] = useState<Settings>({
       bankName: "ACB",
       accountNumber: "365123456",
@@ -111,6 +114,10 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             .includes(q.toLowerCase()),
       ),
     [apps, platform, mode, q],
+  );
+  const totalDownloads = useMemo(
+    () => apps.reduce((sum, app) => sum + app.downloads, 0),
+    [apps],
   );
   return (
     <main className="min-h-screen bg-[#050A18] text-white">
@@ -183,6 +190,13 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
               {mode === "services" ? "Nhận lập trình website, phần mềm, công cụ tự động hóa và sản xuất video AI theo yêu cầu." : mode === "paid" ? "Các sản phẩm trả phí dành cho nhu cầu chuyên sâu, có thông tin giá và hướng dẫn mua rõ ràng." : "Kho ứng dụng Windows, Android và iOS do Hugo Cyberx phát triển hoặc tuyển chọn. Tải miễn phí, thông tin rõ ràng."}
             </p>
+            {apps.length > 0 && (
+              <div className="mt-7 flex flex-wrap gap-7">
+                <Counter value={apps.length} label="Phần mềm & công cụ" />
+                <Counter value={totalDownloads} label="Lượt tải" />
+                <Counter value={3} label="Nền tảng" />
+              </div>
+            )}
           </div>
           <div className="relative flex min-h-[330px] items-center justify-center">
             <div className="absolute h-56 w-56 rounded-full bg-fuchsia-500/20 blur-3xl" />
@@ -426,7 +440,58 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           )}
         </Modal>
       )}
+      {!noticeClosed && (
+        <div className="fixed bottom-20 left-1/2 z-40 w-[min(94vw,680px)] -translate-x-1/2 rounded-2xl border border-cyan-300/25 bg-[#0B1730]/95 p-3 shadow-[0_18px_60px_rgba(3,10,30,.7)] backdrop-blur-xl sm:bottom-4 sm:p-4">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-cyan-300 to-fuchsia-500 text-[#071126]">
+              <Sparkles size={19} />
+            </span>
+            <div className="min-w-0 flex-1 text-sm">
+              <strong className="block">Hugo Cyberx nhận làm theo yêu cầu</strong>
+              <span className="block truncate text-slate-400">Website · Video AI · Công cụ tự động hóa — tư vấn miễn phí.</span>
+            </div>
+            <a href="/dich-vu" className="cyber-shine hidden shrink-0 rounded-xl bg-gradient-to-r from-cyan-300 to-fuchsia-500 px-4 py-2.5 text-sm font-black text-[#071126] sm:block">Xem dịch vụ</a>
+            <a href="tel:0978395539" className="shrink-0 rounded-xl border border-cyan-300/30 px-3 py-2.5 text-sm font-bold text-cyan-200">Gọi ngay</a>
+            <button onClick={() => setNoticeClosed(true)} aria-label="Đóng thông báo" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/5 text-slate-400">
+              <X size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+      <a
+        href="https://zalo.me/0978395539"
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full border border-emerald-300/30 bg-[#071126]/95 py-3 pl-4 pr-5 text-sm font-black text-emerald-200 shadow-[0_14px_50px_rgba(3,10,30,.65)] backdrop-blur-xl"
+      >
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+        </span>
+        <Headset size={18} /> Hỗ trợ Zalo
+      </a>
     </main>
+  );
+}
+function Counter({ value, label }: { value: number; label: string }) {
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (!value) return;
+    let frame = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / 1200);
+      setShown(Math.round(value * (1 - Math.pow(1 - progress, 3))));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [value]);
+  return (
+    <div>
+      <strong className="text-2xl font-black text-cyan-200">{shown.toLocaleString("vi-VN")}+</strong>
+      <p className="text-xs font-bold uppercase tracking-[.14em] text-slate-500">{label}</p>
+    </div>
   );
 }
 function AppLogo({ app }: { app: App }) {
