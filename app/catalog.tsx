@@ -125,6 +125,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
     <main className="min-h-screen text-white">
       <div className="cyber-aurora" aria-hidden />
       <header className="sticky top-0 z-40 border-b border-cyan-300/10 bg-[#050A18]/90 backdrop-blur-xl">
+        <div className="cyber-beam absolute inset-x-0 bottom-[-1px]" aria-hidden />
         <div className="mx-auto flex h-[76px] max-w-[1240px] items-center justify-between px-5 lg:px-8">
           <a href="/" className="flex items-center gap-3">
             <img
@@ -179,6 +180,14 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
         id="thuong-hieu"
         className="cyber-grid relative overflow-hidden border-b border-cyan-300/10"
       >
+        <div className="cyber-stars absolute inset-0" aria-hidden>
+          {[
+            [6, 18, 0], [15, 64, .5], [24, 26, 1], [33, 72, 1.6], [42, 12, 2.1],
+            [52, 58, .8], [61, 30, 2.6], [70, 70, .3], [79, 20, 1.2], [88, 54, 2.2], [94, 36, 1.9],
+          ].map(([left, top, delay], index) => (
+            <span key={index} style={{ left: `${left}%`, top: `${top}%`, animationDelay: `${delay}s` }} />
+          ))}
+        </div>
         <div className="mx-auto grid max-w-[1240px] items-center gap-9 px-5 py-14 lg:grid-cols-[1fr_500px] lg:px-8 lg:py-20">
           <div data-reveal>
             <span className="cyber-glow-badge inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1.5 text-sm font-bold text-cyan-200">
@@ -189,6 +198,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               <br />
               <span className="cyber-text">{mode === "services" ? "Hiện thực hóa ý tưởng." : mode === "paid" ? "Giá trị xứng đáng." : "Trao giá trị thật."}</span>
             </h1>
+            <div className="cyber-beam mt-6 w-56" aria-hidden />
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
               {mode === "services" ? "Nhận lập trình website, phần mềm, công cụ tự động hóa và sản xuất video AI theo yêu cầu." : mode === "paid" ? "Các sản phẩm trả phí dành cho nhu cầu chuyên sâu, có thông tin giá và hướng dẫn mua rõ ràng." : "Kho ứng dụng Windows, Android và iOS do Hugo Cyberx phát triển hoặc tuyển chọn. Tải miễn phí, thông tin rõ ràng."}
             </p>
@@ -246,7 +256,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           {filtered.map((a) => (
             <article
               key={a.id}
-              className="glass-sheen group flex flex-col rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]"
+              className="cyber-shine-soft glass-sheen group flex flex-col rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]"
             >
               <div className="flex items-start justify-between">
                 <AppLogo app={a} />
@@ -311,7 +321,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       {mode === "services" && <Services />}
       {mode !== "free" && <section className="border-t border-white/10">
         <div className="mx-auto grid max-w-[1240px] items-stretch gap-6 px-5 py-12 md:grid-cols-2 lg:px-8" data-reveal>
-          <div id="lien-he" className="glass-sheen flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b]/70 p-6 text-center backdrop-blur-md sm:flex-row sm:p-8 sm:text-left">
+          <div id="lien-he" className="cyber-shine-soft glass-sheen flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b]/70 p-6 text-center backdrop-blur-md sm:flex-row sm:p-8 sm:text-left">
             <img src="/hugo-cyberx-zalo-qr.png" alt="Mã QR kết bạn Zalo với Hugo Cyberx" className="size-44 shrink-0 rounded-2xl bg-white p-2"/>
             <div>
               <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Liên hệ Hugo Cyberx</p>
@@ -320,7 +330,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               <p className="mt-2 font-bold text-cyan-300">0978.39.55.39</p>
             </div>
           </div>
-          <div className="glass-sheen flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b]/70 p-6 text-center backdrop-blur-md sm:flex-row sm:p-8 sm:text-left">
+          <div className="cyber-shine-soft glass-sheen flex flex-col items-center gap-6 rounded-3xl border border-cyan-300/20 bg-[#08142b]/70 p-6 text-center backdrop-blur-md sm:flex-row sm:p-8 sm:text-left">
             <img
               src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fzalo.me%2Fg%2F9uhvognikj5se34j0v8v"
               alt="Mã QR tham gia nhóm Zalo Hugo Cyberx"
@@ -330,7 +340,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Cộng đồng Hugo Cyberx</p>
               <h3 className="mt-2 text-2xl font-black">Tham gia nhóm Zalo để giao lưu và được hướng dẫn</h3>
               <p className="mt-2 leading-7 text-slate-400">Quét mã QR hoặc mở liên kết để trao đổi, nhận hỗ trợ sử dụng phần mềm và chia sẻ kinh nghiệm cùng mọi người.</p>
-              <a href="https://zalo.me/g/9uhvognikj5se34j0v8v" target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-5 py-3 font-black text-[#071126]">Mở nhóm Zalo</a>
+              <a href="https://zalo.me/g/9uhvognikj5se34j0v8v" target="_blank" rel="noreferrer" className="cyber-breathe cyber-shine mt-4 inline-flex rounded-xl bg-cyan-300 px-5 py-3 font-black text-[#071126]">Mở nhóm Zalo</a>
             </div>
           </div>
         </div>
@@ -461,7 +471,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               <strong className="block">Hugo Cyberx nhận làm theo yêu cầu</strong>
               <span className="block truncate text-slate-400">Website · Video AI · Công cụ tự động hóa — tư vấn miễn phí.</span>
             </div>
-            <a href="/dich-vu" className="cyber-shine hidden shrink-0 rounded-xl bg-gradient-to-r from-cyan-300 to-fuchsia-500 px-4 py-2.5 text-sm font-black text-[#071126] sm:block">Xem dịch vụ</a>
+            <a href="/dich-vu" className="cyber-breathe cyber-shine hidden shrink-0 rounded-xl bg-gradient-to-r from-cyan-300 to-fuchsia-500 px-4 py-2.5 text-sm font-black text-[#071126] sm:block">Xem dịch vụ</a>
             <a href="tel:0978395539" className="shrink-0 rounded-xl border border-cyan-300/30 px-3 py-2.5 text-sm font-bold text-cyan-200">Gọi ngay</a>
             <button onClick={() => setNoticeClosed(true)} aria-label="Đóng thông báo" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/5 text-slate-400">
               <X size={15} />
@@ -556,7 +566,7 @@ function Services() {
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <article className="glass-sheen rounded-3xl border border-cyan-300/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
+          <article className="cyber-shine-soft glass-sheen rounded-3xl border border-cyan-300/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
             <span className="grid size-12 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span>
             <h3 className="mt-5 text-2xl font-black">1. Lập trình theo yêu cầu</h3>
             <h4 className="mt-6 text-lg font-black text-cyan-200">Biến ý tưởng thành phần mềm thực tế</h4>
@@ -571,7 +581,7 @@ function Services() {
             <div className="mt-7 rounded-2xl border border-cyan-300/15 bg-[#08142b] p-5"><h4 className="font-black text-white">Bạn chỉ cần có ý tưởng</h4><p className="mt-2 text-sm leading-6 text-slate-400">Không cần biết lập trình hay hiểu về công nghệ. Hãy mô tả vấn đề bạn muốn giải quyết, Hugo Cyberx sẽ cùng bạn tìm phương án để tạo ra sản phẩm có thể sử dụng thực tế.</p><p className="mt-3 font-black text-cyan-300">HUGO CYBERX – Technology Without Limits</p></div>
           </article>
 
-          <article className="glass-sheen rounded-3xl border border-fuchsia-400/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
+          <article className="cyber-shine-soft glass-sheen rounded-3xl border border-fuchsia-400/20 bg-white/[.045] p-6 backdrop-blur-md sm:p-8">
             <span className="grid size-12 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span>
             <h3 className="mt-5 text-2xl font-black">2. Sản xuất video AI theo yêu cầu</h3>
             <h4 className="mt-6 text-lg font-black text-fuchsia-200">Biến ý tưởng thành video bằng AI</h4>

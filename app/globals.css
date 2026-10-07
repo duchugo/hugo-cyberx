@@ -43,4 +43,23 @@ button,a{cursor:pointer}
 [data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
 [data-reveal].revealed{opacity:1;transform:none}
 
-@media (prefers-reduced-motion:reduce){.cyber-aurora::before,.cyber-aurora::after,.cyber-text,.cyber-glow-badge,.cyber-float,.cyber-shine:hover::after{animation:none}[data-reveal]{opacity:1;transform:none;transition:none}}
+/* Vạch sáng chạy qua lại (dưới header, dưới logo, hãy dùng cho mọi đường phân cách nổi bật) */
+@keyframes beam-sweep{from{background-position:-180% 0}to{background-position:280% 0}}
+.cyber-beam{position:relative;height:2px;border-radius:9999px;overflow:hidden;background:rgba(103,232,249,.14)}
+.cyber-beam::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,#22d3ee 42%,#a5f3fc 50%,#22d3ee 58%,transparent);background-size:220% 100%;animation:beam-sweep 2.6s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px rgba(34,211,238,.75))}
+
+/* Ánh sáng lướt qua card khi hover — đúng chuẩn tham chiếu: đổi `left` theo % card nên luôn chạy trọn card, không đọng ở góc */
+.cyber-shine-soft{position:relative;overflow:hidden}
+.cyber-shine-soft::after{content:"";position:absolute;left:-120%;top:0;width:80%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transform:skewX(-22deg);pointer-events:none}
+.cyber-shine-soft:hover::after{animation:shine-sweep-card 1s ease}
+@keyframes shine-sweep-card{0%{left:-120%}100%{left:130%}}
+
+/* Sao nhấp nháy trong hero */
+@keyframes twinkle{0%,100%{opacity:.12;transform:scale(.7)}50%{opacity:.95;transform:scale(1.2)}}
+.cyber-stars{pointer-events:none}
+.cyber-stars span{position:absolute;width:3px;height:3px;border-radius:9999px;background:#a5f3fc;box-shadow:0 0 10px 2px rgba(103,232,249,.55);animation:twinkle 3.6s ease-in-out infinite}
+
+/* Nút chính "thở" sáng nhẹ */
+.cyber-breathe{animation:glow-pulse 2.8s ease-in-out infinite}
+
+@media (prefers-reduced-motion:reduce){.cyber-aurora::before,.cyber-aurora::after,.cyber-text,.cyber-glow-badge,.cyber-float,.cyber-shine:hover::after,.cyber-shine-soft:hover::after,.cyber-beam::before,.cyber-stars span,.cyber-breathe{animation:none}[data-reveal]{opacity:1;transform:none;transition:none}}
