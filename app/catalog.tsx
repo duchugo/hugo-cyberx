@@ -339,7 +339,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <div>
               <p className="text-sm font-black uppercase tracking-[.2em] text-cyan-300">Liên hệ Hugo Cyberx</p>
               <h3 className="mt-2 text-2xl font-black">Kết bạn Zalo để được tư vấn</h3>
-              <p className="mt-2 leading-7 text-slate-400">Quét mã QR để kết bạn với Nguyễn Văn Đức và trao đổi trực tiếp về nhu cầu lập trình hoặc sản xuất video AI.</p>
+              <p className="mt-2 leading-7 text-slate-400">Quét mã QR để kết bạn với Hugo Cyberx và trao đổi trực tiếp về nhu cầu lập trình hoặc sản xuất video AI.</p>
               <p className="mt-2 font-bold text-cyan-300">0978.39.55.39</p>
             </div>
           </div>
@@ -455,7 +455,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             </div>
           </div>
           <p className="mt-6 whitespace-pre-line leading-7 text-slate-300">{detail.description}</p>
-          {detail.saleType === "paid" && <div className="mt-5 rounded-xl border border-fuchsia-400/20 bg-fuchsia-400/[.08] p-4"><strong className="text-fuchsia-200">Giá: {detail.price || "Liên hệ báo giá"}</strong><p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-300">{detail.purchaseNote || "Liên hệ Nguyễn Văn Đức qua số 0978.39.55.39 để mua và nhận phần mềm."}</p></div>}
+          {detail.saleType === "paid" && <div className="mt-5 rounded-xl border border-fuchsia-400/20 bg-fuchsia-400/[.08] p-4"><strong className="text-fuchsia-200">Giá: {detail.price || "Liên hệ báo giá"}</strong><p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-300">{detail.purchaseNote || "Liên hệ Hugo Cyberx qua số 0978.39.55.39 để mua và nhận phần mềm."}</p></div>}
           <div className="mt-5 grid grid-cols-2 gap-3">
             <Stat label="Dung lượng" value={detail.size} />
             <Stat label="Danh mục" value={detail.category} />
