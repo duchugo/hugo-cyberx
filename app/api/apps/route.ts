@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     const includeHidden = new URL(req.url).searchParams.get("includeHidden") === "1" && Boolean(await getAdminIdentity(req));
     const rows = await getRawDb()
       .prepare(
-        `SELECT id,name,description,platform,version,size_bytes AS sizeBytes,category,color,downloads,sale_type AS saleType,price,purchase_note AS purchaseNote,hidden
+        `SELECT id,name,description,platform,version,size_bytes AS sizeBytes,category,color,downloads,sale_type AS saleType,price,purchase_note AS purchaseNote,hidden,created_at AS updatedAt
          FROM applications ${includeHidden ? "" : "WHERE hidden=0"} ORDER BY created_at DESC`,
       )
       .all<Record<string, unknown>>();

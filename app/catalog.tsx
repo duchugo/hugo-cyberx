@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Apple,
   CheckCircle2,
+  Clock,
   Code2,
   Download,
   Gift,
@@ -34,6 +35,7 @@ type App = {
   price?: string;
   purchaseNote?: string;
   logoUrl?: string;
+  updatedAt?: number;
 };
 type Settings = {
   bankName?: string;
@@ -244,38 +246,41 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           {filtered.map((a) => (
             <article
               key={a.id}
-                  className="glass-sheen group rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]"
+              className="glass-sheen group flex flex-col rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]"
             >
               <div className="flex items-start justify-between">
                 <AppLogo app={a} />
-                <span className="flex items-center gap-2 rounded-full bg-white/[.07] px-3 py-1.5 text-xs font-bold text-slate-300">
-                  {picon(a.platform, 15)}
+                <span className="flex items-center gap-1.5 rounded-full border border-cyan-300/25 px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-slate-300">
+                  {picon(a.platform, 13)}
                   {a.platform}
                 </span>
               </div>
-              <h3 className="mt-5 text-xl font-black">{a.name}</h3>
-              <p className={`mt-2 text-sm font-black ${a.saleType === "paid" ? "text-fuchsia-300" : "text-emerald-300"}`}>{a.saleType === "paid" ? (a.price || "Liên hệ báo giá") : "Miễn phí"}</p>
-              <p className="mt-3 min-h-[72px] whitespace-pre-line text-[15px] leading-6 text-slate-400">
+              <h3 className="mt-4 text-lg font-black">{a.name}</h3>
+              <p className={`mt-1 text-xs font-black uppercase tracking-wide ${a.saleType === "paid" ? "text-fuchsia-300" : "text-emerald-300"}`}>{a.saleType === "paid" ? (a.price || "Liên hệ báo giá") : "Miễn phí"}</p>
+              <p className="mb-4 mt-2 line-clamp-3 text-[13px] leading-5 text-slate-400">
                 {a.description}
               </p>
-              <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
-                <button
-                  onClick={() => setDetail(a)}
-                  className="text-sm font-bold text-cyan-300"
-                >
-                  Xem chi tiết
-                </button>
+              <div className="mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4">
+                <div className="min-w-0">
+                  <span className="block truncate text-[11px] font-black uppercase tracking-[.18em] text-slate-500">{a.category}</span>
+                  <button
+                    onClick={() => setDetail(a)}
+                    className="text-[13px] font-bold text-cyan-300 hover:text-cyan-200"
+                  >
+                    Xem chi tiết
+                  </button>
+                </div>
                 {a.saleType === "paid" ? (
-                  <a href="tel:0978395539" className="flex items-center gap-2 rounded-xl bg-fuchsia-400 px-4 py-2.5 text-sm font-black text-[#071126]"><Phone size={16}/> Liên hệ mua</a>
+                  <a href="tel:0978395539" className="flex shrink-0 items-center gap-1.5 rounded-xl bg-fuchsia-400 px-3.5 py-2 text-[13px] font-black text-[#071126]"><Phone size={14}/> Liên hệ mua</a>
                 ) : a.downloadUrl ? (
                   <a
                     href={a.downloadUrl}
-                    className="flex items-center gap-2 rounded-xl bg-cyan-300 px-4 py-2.5 text-sm font-black text-[#071126]"
+                    className="cyber-shine flex shrink-0 items-center gap-1.5 rounded-xl bg-cyan-300 px-3.5 py-2 text-[13px] font-black text-[#071126]"
                   >
-                    <Download size={16} /> Tải miễn phí
+                    <Download size={14} /> Tải miễn phí
                   </a>
                 ) : (
-                  <span className="rounded-xl bg-white/5 px-3 py-2 text-xs font-bold text-slate-500">
+                  <span className="shrink-0 rounded-xl bg-white/5 px-3 py-2 text-[11px] font-bold text-slate-500">
                     Sắp phát hành
                   </span>
                 )}
@@ -418,6 +423,12 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
                 {picon(detail.platform, 15)} {detail.platform} · Phiên bản{" "}
                 {detail.version}
               </p>
+              {detail.updatedAt ? (
+                <p className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                  <Clock size={13} /> Cập nhật phiên bản:{" "}
+                  {new Date(detail.updatedAt).toLocaleString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
+                </p>
+              ) : null}
             </div>
           </div>
           <p className="mt-6 whitespace-pre-line leading-7 text-slate-300">{detail.description}</p>
