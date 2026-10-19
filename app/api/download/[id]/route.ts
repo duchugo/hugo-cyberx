@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getBucket, getRawDb } from "@/db";
-import { sanitizeFilename } from "@/app/api/r2-presign";
+import {
+  presignR2GetDownload,
+  readPresignCredentials,
+  sanitizeFilename,
+} from "@/app/api/r2-presign";
 
 // Analytics must never block a download, so the table is also created on
 // demand here — production D1 self-heals even before the migration runs.
@@ -26,12 +30,68 @@ async function hashIp(ip: string) {
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-async function recordCompletedDownload(
-  db: D1Database,
-  req: NextRequest,
-  id: string,
-  row: { objectKey: string; version: string },
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const db = getRawDb();
+  const row = await db
+    .prepare(
+      "SELECT object_key AS objectKey, sale_type AS saleType, name, version FROM applications WHERE id = ?",
+    )
+    .bind(id)
+    .first<{ objectKey: string; saleType: string; name: string; version: string }>();
+  if (!row) {
+    return NextResponse.json({ error: "Không tìm thấy file." }, { status: 404 });
+  }
+  if (row.saleType === "paid") {
+    return NextResponse.json(
+      { error: "Phần mềm trả phí. Vui lòng liên hệ để mua." },
+      { status: 403 },
+    );
+  }
+  if (!row.objectKey) {
+    return NextResponse.json({ error: "File không tồn tại." }, { status: 404 });
+  }
+
+  const bucket = getBucket();
+  const head = await bucket.head(row.objectKey);
+  if (!head) {
+    return NextResponse.json({ error: "File không tồn tại." }, { status: 404 });
+  }
+
+  const credentials = readPresignCredentials(process.env as Record<string, string | undefined>);
+  type Delivery =
+    | { kind: "redirect"; url: string }
+    | { kind: "stream"; object: NonNullable<Awaited<ReturnType<typeof bucket.get>>> };
+  let delivery: Delivery;
+  try {
+    if (credentials) {
+      const url = await presignR2GetDownload(
+        credentials,
+        row.objectKey,
+        sanitizeFilename(row.objectKey.split("/").pop() || `${row.name}.bin`),
+      );
+      delivery = { kind: "redirect", url };
+    } else if (typeof (bucket as { createSignedUrl?: unknown }).createSignedUrl === "function") {
+      const signed = await (
+        bucket as unknown as {
+          createSignedUrl: (key: string, options: { expiresIn: number }) => Promise<{ url: string }>;
+        }
+      ).createSignedUrl(row.objectKey, { expiresIn: 600 });
+      delivery = { kind: "redirect", url: signed.url };
+    } else {
+      throw new Error("no presign channel available");
+    }
+  } catch (error) {
+    console.error("Presigned download unavailable, falling back to stream", error);
+    const object = await bucket.get(row.objectKey);
+    if (!object) {
+      return NextResponse.json({ error: "File không tồn tại." }, { status: 404 });
+    }
+    delivery = { kind: "stream", object };
+  }
+
+  // R2 does not expose a browser-completion callback. Record the request only
+  // after R2 has accepted the object and a delivery URL/stream is available.
   try {
     await ensureAnalyticsTable(db);
     const ip = req.headers.get("cf-connecting-ip") || "";
@@ -67,42 +127,15 @@ async function recordCompletedDownload(
   } catch (error) {
     console.error("Download analytics failed", error);
   }
-}
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const db = getRawDb();
-  const row = await db
-    .prepare(
-      "SELECT object_key AS objectKey, sale_type AS saleType, name, version FROM applications WHERE id = ?",
-    )
-    .bind(id)
-    .first<{ objectKey: string; saleType: string; name: string; version: string }>();
-  if (!row) {
-    return NextResponse.json({ error: "Không tìm thấy file." }, { status: 404 });
-  }
-  if (row.saleType === "paid") {
-    return NextResponse.json(
-      { error: "Phần mềm trả phí. Vui lòng liên hệ để mua." },
-      { status: 403 },
-    );
-  }
-  if (!row.objectKey) {
-    return NextResponse.json({ error: "File không tồn tại." }, { status: 404 });
-  }
-
-  const bucket = getBucket();
-  const head = await bucket.head(row.objectKey);
-  if (!head) {
-    return NextResponse.json({ error: "File không tồn tại." }, { status: 404 });
-  }
-
-  const object = await bucket.get(row.objectKey);
-  if (!object) {
-    return NextResponse.json({ error: "File không tồn tại." }, { status: 404 });
+  if (delivery.kind === "redirect") {
+    return new Response(null, {
+      status: 302,
+      headers: { location: delivery.url, "cache-control": "no-store" },
+    });
   }
   const headers = new Headers();
-  const streamObject = object as unknown as {
+  const streamObject = delivery.object as unknown as {
     body: ReadableStream;
     httpEtag: string;
     httpMetadata?: { contentType?: string };
@@ -111,21 +144,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     headers.set("content-type", streamObject.httpMetadata.contentType);
   }
   headers.set("etag", streamObject.httpEtag);
-  headers.set("content-length", String(head.size));
-  headers.set("cache-control", "no-store");
   headers.set(
     "content-disposition",
     `attachment; filename="${sanitizeFilename(row.objectKey.split("/").pop() || "")}"`,
   );
-  const trackedBody = streamObject.body.pipeThrough(
-    new TransformStream<Uint8Array, Uint8Array>({
-      transform(chunk, controller) {
-        controller.enqueue(chunk);
-      },
-      async flush() {
-        await recordCompletedDownload(db, req, id, row);
-      },
-    }),
-  );
-  return new Response(trackedBody, { headers });
+  return new Response(streamObject.body, { headers });
 }
