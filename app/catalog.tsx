@@ -130,9 +130,17 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       ),
     [apps, platform, mode, q],
   );
+  const modeApps = useMemo(
+    () => apps.filter((app) => mode === "services" || app.saleType === mode),
+    [apps, mode],
+  );
   const totalDownloads = useMemo(
-    () => apps.reduce((sum, app) => sum + app.downloads, 0),
-    [apps],
+    () => modeApps.reduce((sum, app) => sum + Math.max(0, Number(app.downloads) || 0), 0),
+    [modeApps],
+  );
+  const platformCount = useMemo(
+    () => new Set(modeApps.map((app) => app.platform)).size,
+    [modeApps],
   );
   return (
     <main className="min-h-screen text-white">
@@ -215,11 +223,11 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
               {mode === "services" ? "Nhận lập trình website, phần mềm, công cụ tự động hóa và sản xuất video AI theo yêu cầu." : mode === "paid" ? "Các sản phẩm trả phí dành cho nhu cầu chuyên sâu, có thông tin giá và hướng dẫn mua rõ ràng." : "Kho ứng dụng Windows, Android và iOS do Hugo Cyberx phát triển hoặc tuyển chọn. Tải miễn phí, thông tin rõ ràng."}
             </p>
-            {apps.length > 0 && (
+            {modeApps.length > 0 && (
               <div className="mt-7 flex flex-wrap gap-7">
-                <Counter value={apps.length} label="Phần mềm & công cụ" />
+                <Counter value={modeApps.length} label="Phần mềm & công cụ" />
                 <Counter value={totalDownloads} label="Lượt tải" />
-                <Counter value={3} label="Nền tảng" />
+                <Counter value={platformCount} label="Nền tảng" />
               </div>
             )}
           </div>
@@ -523,7 +531,7 @@ function Counter({ value, label }: { value: number; label: string }) {
   }, [value]);
   return (
     <div>
-      <strong className="text-2xl font-black text-cyan-200">{shown.toLocaleString("vi-VN")}+</strong>
+      <strong className="text-2xl font-black text-cyan-200">{shown.toLocaleString("vi-VN")}</strong>
       <p className="text-xs font-bold uppercase tracking-[.14em] text-slate-500">{label}</p>
     </div>
   );
