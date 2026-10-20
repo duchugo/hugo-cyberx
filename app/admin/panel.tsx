@@ -25,6 +25,14 @@ type App = {
   saleType: "free" | "paid";
   price: string;
   purchaseNote: string;
+  status?: string;
+  features?: string;
+  screenshots?: string;
+  requirements?: string;
+  license?: string;
+  installationGuide?: string;
+  changelog?: string;
+  featured?: boolean;
   hidden: boolean;
   downloadUrl?: string;
   logoUrl?: string;
@@ -160,10 +168,17 @@ export default function AdminPanel({
     const description = prompt("Mô tả", a.description);
     if (!description) return;
     const price = a.saleType === "paid" ? prompt("Giá bán", a.price) ?? a.price : "";
+    const status = prompt("Trạng thái (released/beta/development)", a.status || "released") || a.status || "released";
+    const features = (prompt("Tính năng, mỗi dòng một mục", a.features || "") ?? a.features ?? "");
+    const requirements = (prompt("Yêu cầu hệ thống", a.requirements || "") ?? a.requirements ?? "");
+    const license = (prompt("Giấy phép", a.license || "") ?? a.license ?? "");
+    const installationGuide = (prompt("Hướng dẫn cài đặt", a.installationGuide || "") ?? a.installationGuide ?? "");
+    const changelog = (prompt("Lịch sử cập nhật", a.changelog || "") ?? a.changelog ?? "");
+    const screenshots = (prompt("Ảnh minh họa, mỗi dòng một URL", a.screenshots || "") ?? a.screenshots ?? "");
     const r = await fetch("/api/apps", {
       method: "PATCH",
       headers: { ...authorization, "content-type": "application/json" },
-      body: JSON.stringify({ ...a, name, version, description, price }),
+      body: JSON.stringify({ ...a, name, version, description, price, status, features, requirements, license, installationGuide, changelog, screenshots }),
     });
     setNote(r.ok ? "Đã cập nhật phần mềm." : "Không thể cập nhật.");
     if (r.ok) load();
@@ -297,6 +312,20 @@ export default function AdminPanel({
             <Field label="Hướng dẫn mua (nếu trả phí)">
               <textarea name="purchaseNote" rows={2} placeholder="Ví dụ: Liên hệ 0978.39.55.39 để thanh toán và nhận phần mềm" />
             </Field>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Trạng thái">
+                <select name="status" defaultValue="released"><option value="released">Đã phát hành</option><option value="beta">Beta</option><option value="development">Đang phát triển</option></select>
+              </Field>
+              <Field label="Giấy phép">
+                <input name="license" placeholder="Ví dụ: Miễn phí cho cá nhân" />
+              </Field>
+            </div>
+            <Field label="Tính năng (mỗi dòng một mục)"><textarea name="features" rows={3} /></Field>
+            <Field label="Yêu cầu hệ thống"><textarea name="requirements" rows={2} /></Field>
+            <Field label="Hướng dẫn cài đặt"><textarea name="installationGuide" rows={2} /></Field>
+            <Field label="Lịch sử cập nhật"><textarea name="changelog" rows={2} /></Field>
+            <Field label="Ảnh minh họa (mỗi dòng một URL)"><textarea name="screenshots" rows={2} /></Field>
+            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[.03] p-3 text-sm font-bold text-slate-300"><input name="featured" type="checkbox" className="size-4 accent-cyan-300" /> Ưu tiên hiển thị nổi bật</label>
             <div className="grid gap-4 sm:grid-cols-[130px_1fr]">
               <Field label="Màu logo">
                 <input name="color" type="color" defaultValue="#16D9E3" />

@@ -41,13 +41,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, updated: true });
     }
     const saleType = b.saleType === "paid" ? "paid" : "free";
+    const status = String(b.status || "released").trim();
     await getRawDb()
-      .prepare("INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,hidden,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+      .prepare("INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,hidden,status,features,screenshots,requirements,license,installation_guide,changelog,featured,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
       .bind(
         b.id, String(b.name || "").trim(), String(b.description || "").trim(),
         b.platform || "Windows", b.version || "1.0.0", Number(b.size) || 0,
         b.category || "Tiện ích", b.color || "#16D9E3", b.key, 0, saleType,
-        String(b.price || ""), String(b.purchaseNote || ""), b.hidden === "on" ? 1 : 0, Date.now(), identity.id,
+        String(b.price || ""), String(b.purchaseNote || ""), b.hidden === "on" ? 1 : 0, status,
+        String(b.features || ""), String(b.screenshots || ""), String(b.requirements || ""),
+        String(b.license || ""), String(b.installationGuide || ""), String(b.changelog || ""),
+        b.featured === "on" ? 1 : 0, Date.now(), identity.id,
       )
       .run();
     return NextResponse.json({ ok: true });

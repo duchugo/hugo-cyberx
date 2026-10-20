@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     const includeHidden = new URL(req.url).searchParams.get("includeHidden") === "1" && Boolean(await getAdminIdentity(req));
     const rows = await getRawDb()
       .prepare(
-        `SELECT id,name,description,platform,version,size_bytes AS sizeBytes,category,color,downloads,sale_type AS saleType,price,purchase_note AS purchaseNote,hidden,created_at AS updatedAt
+        `SELECT id,name,description,platform,version,size_bytes AS sizeBytes,category,color,downloads,sale_type AS saleType,price,purchase_note AS purchaseNote,hidden,status,features,screenshots,requirements,license,installation_guide AS installationGuide,changelog,featured,created_at AS updatedAt
          FROM applications ${includeHidden ? "" : "WHERE hidden=0"} ORDER BY created_at DESC`,
       )
       .all<Record<string, unknown>>();
@@ -70,10 +70,18 @@ export async function POST(req: NextRequest) {
       saleType = form.get("saleType") === "paid" ? "paid" : "free",
       price = String(form.get("price") || "").trim(),
       purchaseNote = String(form.get("purchaseNote") || "").trim(),
+      status = String(form.get("status") || "released").trim(),
+      features = String(form.get("features") || "").trim(),
+      screenshots = String(form.get("screenshots") || "").trim(),
+      requirements = String(form.get("requirements") || "").trim(),
+      license = String(form.get("license") || "").trim(),
+      installationGuide = String(form.get("installationGuide") || "").trim(),
+      changelog = String(form.get("changelog") || "").trim(),
+      featured = form.get("featured") === "on" ? 1 : 0,
       hidden = form.get("hidden") === "on" ? 1 : 0;
     await getRawDb()
       .prepare(
-        "INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,hidden,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO applications (id,name,description,platform,version,size_bytes,category,color,object_key,downloads,sale_type,price,purchase_note,hidden,status,features,screenshots,requirements,license,installation_guide,changelog,featured,created_at,uploader_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
       )
       .bind(
         id,
@@ -90,6 +98,14 @@ export async function POST(req: NextRequest) {
         price,
         purchaseNote,
         hidden,
+        status,
+        features,
+        screenshots,
+        requirements,
+        license,
+        installationGuide,
+        changelog,
+        featured,
         Date.now(),
         identity.id,
       )
@@ -109,6 +125,14 @@ export async function POST(req: NextRequest) {
         price,
         purchaseNote,
         hidden: Boolean(hidden),
+        status,
+        features,
+        screenshots,
+        requirements,
+        license,
+        installationGuide,
+        changelog,
+        featured: Boolean(featured),
       }),
     );
   } catch (e) {
@@ -126,7 +150,7 @@ export async function PATCH(req: NextRequest) {
   const b = await req.json();
   await getRawDb()
     .prepare(
-      "UPDATE applications SET name=?,description=?,platform=?,version=?,category=?,color=?,sale_type=?,price=?,purchase_note=?,hidden=? WHERE id=?",
+      "UPDATE applications SET name=?,description=?,platform=?,version=?,category=?,color=?,sale_type=?,price=?,purchase_note=?,hidden=?,status=?,features=?,screenshots=?,requirements=?,license=?,installation_guide=?,changelog=?,featured=? WHERE id=?",
     )
     .bind(
       b.name,
@@ -139,6 +163,14 @@ export async function PATCH(req: NextRequest) {
       b.price || "",
       b.purchaseNote || "",
       b.hidden ? 1 : 0,
+      b.status || "released",
+      b.features || "",
+      b.screenshots || "",
+      b.requirements || "",
+      b.license || "",
+      b.installationGuide || "",
+      b.changelog || "",
+      b.featured ? 1 : 0,
       b.id,
     )
     .run();

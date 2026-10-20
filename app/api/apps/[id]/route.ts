@@ -11,7 +11,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     const row = await getRawDb()
       .prepare(
         `SELECT id,name,description,platform,version,size_bytes AS sizeBytes,category,color,downloads,
-                sale_type AS saleType,price,purchase_note AS purchaseNote,created_at AS updatedAt
+                sale_type AS saleType,price,purchase_note AS purchaseNote,status,features,screenshots,requirements,license,
+                installation_guide AS installationGuide,changelog,featured,created_at AS updatedAt
          FROM applications WHERE id = ? AND hidden = 0`,
       )
       .bind(id)
@@ -24,6 +25,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       icon: String(row.name).split(/\s+/).map((value) => value[0]).join("").slice(0, 2).toUpperCase(),
       downloadUrl: `/api/download/${row.id}`,
       hidden: false,
+      featured: Boolean(Number(row.featured)),
     });
   } catch (error) {
     console.error("Unable to load product detail", error);
