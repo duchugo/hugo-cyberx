@@ -219,9 +219,9 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               {mode === "free" ? "Công cụ miễn phí từ Hugo Cyberx" : mode === "paid" ? "Phần mềm bản quyền & cao cấp" : "Dịch vụ công nghệ Hugo Cyberx"}
             </span>
             <h1 className="mt-5 text-4xl font-black leading-[1.06] tracking-[-.04em] sm:text-6xl">
-              {mode === "services" ? "Công nghệ theo yêu cầu." : mode === "paid" ? "Công cụ chuyên nghiệp." : "Công nghệ dễ dùng."}
+              Công nghệ dễ dùng.
               <br />
-              <span className="cyber-text">{mode === "services" ? "Hiện thực hóa ý tưởng." : mode === "paid" ? "Giá trị xứng đáng." : "Trao giá trị thật."}</span>
+              <span className="cyber-text">Trao giá trị thật.</span>
             </h1>
             <div className="cyber-beam mt-6 w-56" aria-hidden />
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
