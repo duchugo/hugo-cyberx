@@ -277,7 +277,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           </p>
           <h2 className="mt-2 text-3xl font-black">{mode === "paid" ? "Phần mềm trả phí" : "Phần mềm miễn phí"}</h2>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {mode === "paid" && filtered.length === 0 ? <div className="rounded-3xl border border-fuchsia-300/20 bg-fuchsia-400/[.06] p-8 text-center"><p className="text-sm font-black uppercase tracking-[.2em] text-fuchsia-300">Premium Software</p><h3 className="mt-3 text-2xl font-black">Sản phẩm thương mại đang được nghiên cứu</h3><p className="mx-auto mt-3 max-w-xl leading-7 text-slate-400">Hugo Cyberx đang tập trung hoàn thiện những sản phẩm chủ lực. Thông tin phát hành sẽ được cập nhật khi có phiên bản đủ điều kiện công bố.</p></div> : <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((a) => (
             <article
               key={a.id}
@@ -319,7 +319,7 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               </div>
             </article>
           ))}
-        </div>
+        </div>}
       </section>}
       {mode === "free" && <section id="an-toan" className="border-y border-white/10 bg-white/[.03]">
         <div className="mx-auto grid max-w-[1240px] gap-6 px-5 py-10 sm:grid-cols-3 lg:px-8" data-reveal>
@@ -576,7 +576,7 @@ function Services() {
         <div className="mt-10" data-reveal>
           <h3 className="flex items-center gap-3 text-xl font-black"><span className="grid size-11 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span>1. Lập trình theo yêu cầu</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Bạn có ý tưởng nhưng chưa biết bắt đầu, đang dùng Excel hoặc nhiều công cụ rời rạc? Hugo Cyberx tư vấn, thiết kế và lập trình theo đúng quy trình công việc, nhu cầu sử dụng và ngân sách thực tế — không ép dùng mẫu có sẵn.</p>
-          <a href="/dich-vu/phan-mem" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-4 py-2.5 text-sm font-black text-[#071126]">Xem dịch vụ lập trình</a>
+          <div className="flex flex-wrap gap-3"><a href="/dich-vu/website" className="mt-4 inline-flex rounded-xl border border-cyan-300/30 px-4 py-2.5 text-sm font-black text-cyan-200">Website</a><a href="/dich-vu/phan-mem" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-4 py-2.5 text-sm font-black text-[#071126]">Phần mềm</a></div>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {programmingCards.map(({ icon: Icon, title, desc }) => (
               <article key={title} className="cyber-shine-soft glass-sheen flex flex-col rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]">
