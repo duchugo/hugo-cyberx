@@ -384,24 +384,8 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
       <footer className="border-t border-white/10 px-5 py-8 text-center text-sm text-slate-500">
         <p>© 2026 Hugo Cyberx · Technology Without Limits</p>
         <div className="mt-3 flex justify-center gap-4">
-          <button
-            onClick={() =>
-              alert(
-                "Hugo Cyberx chỉ phân phối phần mềm có quyền chia sẻ. Người dùng cần tự kiểm tra tính phù hợp trước khi cài đặt.",
-              )
-            }
-          >
-            Điều khoản sử dụng
-          </button>
-          <button
-            onClick={() =>
-              alert(
-                "Chỉ tải file từ trang chính thức. Luôn quét virus và sao lưu dữ liệu trước khi cài đặt.",
-              )
-            }
-          >
-            Cảnh báo an toàn
-          </button>
+          <a href="/dieu-khoan-su-dung">Điều khoản sử dụng</a>
+          <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
           <a href="/admin" className="opacity-40">
             Quản trị
           </a>
@@ -592,6 +576,7 @@ function Services() {
         <div className="mt-10" data-reveal>
           <h3 className="flex items-center gap-3 text-xl font-black"><span className="grid size-11 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Code2 /></span>1. Lập trình theo yêu cầu</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Bạn có ý tưởng nhưng chưa biết bắt đầu, đang dùng Excel hoặc nhiều công cụ rời rạc? Hugo Cyberx tư vấn, thiết kế và lập trình theo đúng quy trình công việc, nhu cầu sử dụng và ngân sách thực tế — không ép dùng mẫu có sẵn.</p>
+          <a href="/dich-vu/phan-mem" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-4 py-2.5 text-sm font-black text-[#071126]">Xem dịch vụ lập trình</a>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {programmingCards.map(({ icon: Icon, title, desc }) => (
               <article key={title} className="cyber-shine-soft glass-sheen flex flex-col rounded-3xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-cyan-300/40 hover:shadow-[0_24px_70px_-20px_rgba(34,211,238,.45)]">
@@ -606,6 +591,7 @@ function Services() {
         <div className="mt-10" data-reveal>
           <h3 className="flex items-center gap-3 text-xl font-black"><span className="grid size-11 place-items-center rounded-2xl bg-fuchsia-400/15 text-fuchsia-300"><Video /></span>2. Sản xuất video AI theo yêu cầu</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Chỉ cần hình ảnh sản phẩm, nội dung hoặc ý tưởng ban đầu, Hugo Cyberx xây dựng thành video hoàn chỉnh cho cá nhân, cửa hàng, doanh nghiệp và người sáng tạo nội dung — ưu tiên video ngắn, dễ xem, tạo ấn tượng nhanh.</p>
+          <a href="/dich-vu/video-ai" className="mt-4 inline-flex rounded-xl bg-fuchsia-400 px-4 py-2.5 text-sm font-black text-[#071126]">Xem dịch vụ video AI</a>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {videoCards.map(({ icon: Icon, title, desc }) => (
               <article key={title} className="cyber-shine-soft glass-sheen flex flex-col rounded-3xl border border-fuchsia-400/20 bg-white/[.045] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-fuchsia-400/50 hover:shadow-[0_24px_70px_-20px_rgba(236,85,242,.45)]">

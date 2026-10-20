@@ -1,4 +1,4 @@
 import type { Metadata } from "next";
 import "./globals.css";
-export const metadata:Metadata={title:"Hugo Cyberx — Technology Without Limits",description:"Phần mềm miễn phí, nhận lập trình và sản xuất video AI theo yêu cầu.",icons:{icon:"/hugo-cyberx-main-logo.webp",shortcut:"/hugo-cyberx-main-logo.webp"}};
+export const metadata:Metadata={metadataBase:new URL("https://hugocyberx.pages.dev"),title:{default:"Hugo Cyberx — Technology Without Limits",template:"%s — Hugo Cyberx"},description:"Phần mềm miễn phí, phần mềm thương mại và dịch vụ công nghệ theo yêu cầu từ Hugo Cyberx.",alternates:{canonical:"/"},openGraph:{title:"Hugo Cyberx — Technology Without Limits",description:"Phần mềm miễn phí, phần mềm thương mại và dịch vụ công nghệ theo yêu cầu.",url:"https://hugocyberx.pages.dev",siteName:"Hugo Cyberx",locale:"vi_VN",type:"website",images:["/hugo-cyberx-main-logo.webp"]},robots:{index:true,follow:true},icons:{icon:"/hugo-cyberx-main-logo.webp",shortcut:"/hugo-cyberx-main-logo.webp"}};
 export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="vi"><body>{children}</body></html>}
