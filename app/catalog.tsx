@@ -173,6 +173,8 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <a href="/" className={mode === "free" ? "text-cyan-300" : ""}>Miễn phí</a>
             <a href="/phan-mem-tra-phi" className={mode === "paid" ? "text-fuchsia-300" : ""}>Trả phí</a>
             <a href="/dich-vu" className={mode === "services" ? "text-cyan-300" : ""}>Dịch vụ</a>
+            <a href="/ho-tro">Hỗ trợ</a>
+            <a href="/gioi-thieu">Giới thiệu</a>
             <a href="/gemini-watermark" className="text-emerald-300">Xóa logo Gemini</a>
           </nav>
           <button
@@ -187,6 +189,8 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
             <a href="/" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Phần mềm miễn phí</a>
             <a href="/phan-mem-tra-phi" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Phần mềm trả phí</a>
             <a href="/dich-vu" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Dịch vụ</a>
+            <a href="/ho-tro" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Hỗ trợ</a>
+            <a href="/gioi-thieu" className="block rounded-xl bg-white/5 px-4 py-3 font-bold">Giới thiệu</a>
             <a href="/gemini-watermark" className="block rounded-xl bg-white/5 px-4 py-3 font-bold text-emerald-300">Xóa logo Gemini</a>
             {mode === "free" && <button
               onClick={() => setThanks(true)}
@@ -294,12 +298,9 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
               <div className="mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4">
                 <div className="min-w-0">
                   <span className="block truncate text-[11px] font-black uppercase tracking-[.18em] text-slate-500">{a.category}</span>
-                  <button
-                    onClick={() => setDetail(a)}
-                    className="text-[13px] font-bold text-cyan-300 hover:text-cyan-200"
-                  >
+                  <a href={`/phan-mem/${encodeURIComponent(a.id)}`} className="text-[13px] font-bold text-cyan-300 hover:text-cyan-200">
                     Xem chi tiết
-                  </button>
+                  </a>
                 </div>
                 {a.saleType === "paid" ? (
                   <a href="tel:0978395539" className="flex shrink-0 items-center gap-1.5 rounded-xl bg-fuchsia-400 px-3.5 py-2 text-[13px] font-black text-[#071126]"><Phone size={14}/> Liên hệ mua</a>
@@ -404,6 +405,8 @@ export default function Catalog({mode="free"}:{mode?:"free"|"paid"|"services"}) 
           <a href="/admin" className="opacity-40">
             Quản trị
           </a>
+          <a href="/ho-tro">Hỗ trợ</a>
+          <a href="/gioi-thieu">Giới thiệu</a>
         </div>
       </footer>
       {mode === "free" && thanks && (
