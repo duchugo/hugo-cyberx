@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { ArrowLeft, Apple, Download, Monitor, Smartphone } from "lucide-react";
 
 type Product = {
@@ -33,14 +34,15 @@ const platformIcon = (platform: Product["platform"]) =>
 const lines = (value?: string) => (value || "").split(/\r?\n|,/).map((item) => item.trim()).filter(Boolean);
 const statusLabel = (value?: string) => value === "beta" ? "Beta" : value === "development" ? "Đang phát triển" : "Đã phát hành";
 
-export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ProductPage() {
+  const params = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
-    params.then(({ id }) => fetch(`/api/apps/${encodeURIComponent(id)}`))
+    fetch(`/api/apps/${encodeURIComponent(params.id)}`)
       .then(async (response) => {
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || "Không tìm thấy phần mềm.");
@@ -49,7 +51,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
       .catch((reason) => active && setError(reason instanceof Error ? reason.message : "Không thể tải thông tin phần mềm."))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
-  }, [params]);
+  }, [params.id]);
 
   return (
     <main className="min-h-screen bg-[#050A18] px-5 py-8 text-white sm:py-12">
