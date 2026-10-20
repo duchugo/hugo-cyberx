@@ -24,6 +24,7 @@ button,a{cursor:pointer}
 @keyframes glow-pulse{0%,100%{box-shadow:0 0 16px rgba(34,211,238,.22)}50%{box-shadow:0 0 32px rgba(236,85,242,.38)}}
 @keyframes float-y{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes shine-sweep{from{transform:translateX(-140%) skewX(-18deg)}to{transform:translateX(240%) skewX(-18deg)}}
+@keyframes legacy-rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
 .cyber-aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
 .cyber-aurora::before,.cyber-aurora::after{content:"";position:absolute;border-radius:9999px;filter:blur(90px);opacity:.6}
@@ -36,6 +37,8 @@ button,a{cursor:pointer}
 .cyber-text{background-size:260% 100%;animation:gradient-pan 7s ease-in-out infinite}
 .cyber-glow-badge{animation:glow-pulse 3.2s ease-in-out infinite}
 .cyber-float{animation:float-y 6s ease-in-out infinite}
+.legacy-rise{animation:legacy-rise .9s cubic-bezier(.2,.7,.3,1) both}
+.legacy-rise-1{animation-delay:.12s}.legacy-rise-2{animation-delay:.28s}.legacy-rise-3{animation-delay:.46s}
 .cyber-shine{position:relative;overflow:hidden}
 .cyber-shine::after{content:"";position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);opacity:0;pointer-events:none}
 .cyber-shine:hover::after{opacity:1;animation:shine-sweep .9s ease}
@@ -62,4 +65,4 @@ button,a{cursor:pointer}
 /* Nút chính "thở" sáng nhẹ */
 .cyber-breathe{animation:glow-pulse 2.8s ease-in-out infinite}
 
-@media (prefers-reduced-motion:reduce){.cyber-aurora::before,.cyber-aurora::after,.cyber-text,.cyber-glow-badge,.cyber-float,.cyber-shine:hover::after,.cyber-shine-soft:hover::after,.cyber-beam::before,.cyber-stars span,.cyber-breathe{animation:none}[data-reveal]{opacity:1;transform:none;transition:none}}
+@media (prefers-reduced-motion:reduce){.cyber-aurora::before,.cyber-aurora::after,.cyber-text,.cyber-glow-badge,.cyber-float,.legacy-rise,.cyber-shine:hover::after,.cyber-shine-soft:hover::after,.cyber-beam::before,.cyber-stars span,.cyber-breathe{animation:none;opacity:1;transform:none}[data-reveal]{opacity:1;transform:none;transition:none}}
