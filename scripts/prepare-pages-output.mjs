@@ -18,6 +18,11 @@ const STATIC_PREFIXES = ["/_next/static/", "/gwr-video/"];
 export default {
   async fetch(request, env, ctx) {
     const { pathname } = new URL(request.url);
+    if (pathname === "/google4dbe9d75ccfb7374.html") {
+      return new Response("google-site-verification: google4dbe9d75ccfb7374.html", {
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
+    }
     if (STATIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
       return env.ASSETS.fetch(request);
     }
